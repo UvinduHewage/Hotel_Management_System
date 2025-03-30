@@ -4,12 +4,16 @@ import { useNavigate } from "react-router-dom";
 const AvailableRoomsTable = ({ rooms }) => {
   const navigate = useNavigate();
 
-  // Sort rooms by room number in ascending order, considering the numeric part
-  const sortedRooms = rooms.sort((a, b) => {
-    const roomNumberA = parseInt(a.roomNumber.slice(1), 10); // Extract numeric part
-    const roomNumberB = parseInt(b.roomNumber.slice(1), 10); // Extract numeric part
-    return roomNumberA - roomNumberB;
-  });
+  // Ensure rooms exist and filter out any without roomNumber
+  const sortedRooms = Array.isArray(rooms)
+    ? [...rooms]
+        .filter((room) => room?.roomNumber)
+        .sort((a, b) => {
+          const roomNumberA = parseInt(a.roomNumber.slice(1), 10); // Extract numeric part
+          const roomNumberB = parseInt(b.roomNumber.slice(1), 10); // Extract numeric part
+          return roomNumberA - roomNumberB;
+        })
+    : [];
 
   return (
     <div className="overflow-x-auto">

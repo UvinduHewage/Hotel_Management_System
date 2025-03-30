@@ -1,25 +1,56 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AvailableRooms from "./pages/Bawantha_pages/AvailableRooms";
-import BookedRooms from "./pages/Bawantha_pages/BookedRooms";
-import ReservationHistory from "./pages/Bawantha_pages/ReservationHistory";
-import BookingPage from "./pages/Bawantha_pages/BookingPage"; 
-import ViewBookingPage from "./pages/Bawantha_pages/ViewBookingPage";
-import UpdateBookingPage from "./pages/Bawantha_pages/UpdateBookingPage";
+import React, { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+// import Sidebar from "./components/Uvindu_components/Sidebar";
+// import Header from "./components/Uvindu_components/Header";
+// import Dashboard from "./components/Uvindu_components/Dashboard";
+
+import BillingPage from "./pages/Dineth_pages/BillingPage";
+import PaymentWithStripe from "./components/Dineth_Components/PaymentWithStripe"; 
+
+import CustomerBill from "./pages/Dineth_pages/CustomerBill";  // ✅ Import wrapper component
+
+ 
+
+import AllBillsPage from "./pages/Dineth_pages/AllBillsPage"; 
+
+import "./App.css";
 
 function App() {
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+  const handleSidebarToggle = () => {
+    setIsSidebarVisible((prevState) => !prevState);
+  };
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<AvailableRooms />} />
-        <Route path="/booked-rooms" element={<BookedRooms />} />
-        <Route path="/reservation-history" element={<ReservationHistory />} />
-        <Route path="/booking/:roomNumber" element={<BookingPage />} /> 
-        <Route path="/bookings/:id" element={<ViewBookingPage />} />\
-        <Route path="/bookings/:id/edit" element={<UpdateBookingPage />} />
+    <div className="app-container">
+      {/* <Header onSidebarToggle={handleSidebarToggle} /> */}
+      <div className="flex mt-16">
+        {/* <Sidebar isVisible={isSidebarVisible} /> */}
+        <div className="content flex-1 p-6">
+          <Routes>
+            {/* <Route path="/" element={<Dashboard />} /> */}
+            
+          
+   
+            <Route path="/payment" element={<PaymentWithStripe />} />
+            
+            {/* <Route path="/confirm-booking" element={<BookingConfirmationForm />} /> */}
+            {/* <Route path="/rooms" element={<RoomList />} /> */}
+ 
+            {/* <Route path="/reservations" element={<ReservationList />} /> */}
         
-      </Routes>
-    </Router>
+              {/* <Route path="/admin/rooms" element={<RoomManager />} /> */}
+              <Route path="/billP" element={<BillingPage />} />
+              <Route path="/Cus_bill" element={<CustomerBill />} />
+
+              
+             <Route path="/all-bills" element={<AllBillsPage />} />
+       
+          </Routes>
+        </div>
+      </div>
+    </div>
   );
 }
 

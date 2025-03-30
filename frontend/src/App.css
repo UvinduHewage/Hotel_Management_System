@@ -28,6 +28,108 @@
   color: #61dafb;
 }
 
+
+
+
+/*  */
+/* App.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  margin-top: 0;  /* Reset the margin-top here */
+}
+
+header {
+  position: fixed;  /* Fixed to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2d3748;  /* Tailwind gray-800 */
+  padding: 1rem 2rem;
+  z-index: 1000;  /* Ensure it stays above the sidebar */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* App.css */
+
+/* AddStaff.js */
+
+/* Set up a clean background for the app */
+body {
+  font-family: 'Arial', sans-serif;
+  /* background: url('https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed; */
+  background-color: #f5f5f5; /* optional neutral background */
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Styling for the form container */
+.form-container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 100%;
+  backdrop-filter: blur(10px);
+}
+
+/* Shift checkbox container */
+.shift-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.shift-checkbox:hover {
+  transform: scale(1.05);
+}
+
+
+/* Dashboad.js */
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar {
+  scroll-behavior: smooth;
+}
+
+
+
+
+
+
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,23 +137,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  text-align: center;
-  padding: 10px;
-}
-
-th {
-  background-color: #f4f4f4;
-}
-
-button {
-  display: block;
-  width: 100%;
-  text-align: center;
 }
