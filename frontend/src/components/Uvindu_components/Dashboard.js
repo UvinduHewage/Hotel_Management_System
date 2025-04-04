@@ -10,7 +10,6 @@ import {
   CheckCircle2, 
   XCircle 
 } from 'lucide-react';
-import html2canvas from "html2canvas";
 import { pdf } from "@react-pdf/renderer";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import * as XLSX from 'xlsx';

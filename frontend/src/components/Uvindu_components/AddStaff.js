@@ -21,11 +21,78 @@ const AddStaff = () => {
   const [isJobTitleOpen, setIsJobTitleOpen] = useState(false);
 
   const departments = {
-    "Front Office": ["Receptionist", "Guest Service Agent", "Concierge"],
-    Housekeeping: ["Housekeeping Manager", "Room Attendant"],
-    "Food & Beverage": ["F&B Manager", "Chef", "Waiter", "Bartender"],
-    Security: ["Security Manager", "Security Guard"],
+    "Front Office": [
+      "Front Desk Manager",
+      "Receptionist",
+      "Guest Service Agent",
+      "Concierge",
+      "Bellboy",
+      "Bellman",
+      "Night Auditor",
+      "Reservation Agent"
+    ],
+    Housekeeping: [
+      "Housekeeping Manager",
+      "Room Attendant",
+      "Housekeeping Supervisor",
+      "Laundry Attendant",
+      "Public Area Cleaner"
+    ],
+    "Food & Beverage": [
+      "F&B Manager",
+      "Restaurant Manager",
+      "Chef",
+      "Waiter",
+      "Waitress",
+      "Bartender",
+      "Kitchen Staff",
+      "Banquet Coordinator",
+      "Steward"
+    ],
+    "Sales & Marketing": [
+      "Sales Manager",
+      "Marketing Manager",
+      "Public Relations Manager",
+      "Event Coordinator",
+      "Digital Marketing Specialist"
+    ],
+    Accounting: [
+      "Finance Manager",
+      "Accountant",
+      "Payroll Coordinator",
+      "Financial Analyst"
+    ],
+    "Human Resources": [
+      "HR Manager",
+      "HR Assistant",
+      "Recruitment Officer",
+      "Training Coordinator"
+    ],
+    "Maintenance & Engineering": [],
+    Security: [
+      "Security Manager",
+      "Security Guard",
+      "Surveillance Officer"
+    ],
+    IT: [
+      "IT Manager",
+      "Network Administrator",
+      "Systems Support Specialist",
+      "IT Technician"
+    ],
+    "Spa & Recreation": [
+      "Spa Manager",
+      "Spa Therapist",
+      "Fitness Instructor",
+      "Pool Attendant"
+    ],
+    "Purchasing & Supply": [
+      "Purchasing Manager",
+      "Inventory Control Officer",
+      "Procurement Specialist"
+    ]
   };
+  
 
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
@@ -322,8 +389,8 @@ const AddStaff = () => {
                     <motion.div
                       className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mb-2"
                       animate={{
-                        backgroundColor: formData.shifts[shift] ? "#2563EB" : "#ffffff",
-                        borderColor: formData.shifts[shift] ? "#1E3A8A" : "#9CA3AF",
+                        backgroundColor: formData.shifts[shift] ? "#E5E4E2" : "#FFFFFF",
+                        borderColor: formData.shifts[shift] ? "#FFFFFF" : "#9CA3AF",
                       }}
                     >
                       {formData.shifts[shift] && (
@@ -333,11 +400,11 @@ const AddStaff = () => {
                           transition={{ duration: 0.3 }}
                         >
                           {shift === "morning" ? (
-                            <Sun className="text-yellow-300 w-8 h-8" />
+                            <Sun className="text-yellow-500 w-8 h-8" />
                           ) : shift === "afternoon" ? (
-                            <SunDim className="text-orange-300 w-8 h-8" />
+                            <SunDim className="text-orange-500 w-8 h-8" />
                           ) : (
-                            <Moon className="text-indigo-300 w-8 h-8" />
+                            <Moon className="text-indigo-500 w-8 h-8" />
                           )}
                         </motion.div>
                       )}

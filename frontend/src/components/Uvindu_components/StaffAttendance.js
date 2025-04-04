@@ -121,9 +121,9 @@ const StaffAttendance = () => {
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="relative text-center z-10">
-           <Hotel className="w-24 h-24 text-blue-600 mx-auto mb-6" />
-           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Manage Attendance</h3>
-           <p className="text-gray-600 max-w-sm mx-auto">
+           <Hotel className="w-24 h-24 text-black mx-auto mb-6" />
+           <h3 className="text-2xl font-semibold text-black mb-4">Manage Attendance</h3>
+           <p className="text-black max-w-sm mx-auto">
            Keep track of staff attendance effortlessly with our efficient monitoring system.
            </p>
         </div>
@@ -171,7 +171,7 @@ const StaffAttendance = () => {
                   <span 
                     className={`
                       w-6 h-6 rounded-md border-2 flex items-center justify-center 
-                      ${attendance[member._id] ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}
+                      ${attendance[member._id] ? 'bg-gray-100 border-gray-300' : 'border-gray-300'}
                     `}
                   >
                     {attendance[member._id] && '✔'}

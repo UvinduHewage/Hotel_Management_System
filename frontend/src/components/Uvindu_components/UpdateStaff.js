@@ -24,13 +24,82 @@ const UpdateStaff = () => {
   const [isDepartmentOpen, setIsDepartmentOpen] = useState(false);
   const [isJobTitleOpen, setIsJobTitleOpen] = useState(false);
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState("");
+  
 
-  const departments = {
-    "Front Office": ["Receptionist", "Guest Service Agent", "Concierge"],
-    Housekeeping: ["Housekeeping Manager", "Room Attendant"],
-    "Food & Beverage": ["F&B Manager", "Chef", "Waiter", "Bartender"],
-    Security: ["Security Manager", "Security Guard"],
-  };
+const departments = {
+  "Front Office": [
+    "Front Desk Manager",
+    "Receptionist",
+    "Guest Service Agent",
+    "Concierge",
+    "Bellboy",
+    "Bellman",
+    "Night Auditor",
+    "Reservation Agent"
+  ],
+  Housekeeping: [
+    "Housekeeping Manager",
+    "Room Attendant",
+    "Housekeeping Supervisor",
+    "Laundry Attendant",
+    "Public Area Cleaner"
+  ],
+  "Food & Beverage": [
+    "F&B Manager",
+    "Restaurant Manager",
+    "Chef",
+    "Waiter",
+    "Waitress",
+    "Bartender",
+    "Kitchen Staff",
+    "Banquet Coordinator",
+    "Steward"
+  ],
+  "Sales & Marketing": [
+    "Sales Manager",
+    "Marketing Manager",
+    "Public Relations Manager",
+    "Event Coordinator",
+    "Digital Marketing Specialist"
+  ],
+  Accounting: [
+    "Finance Manager",
+    "Accountant",
+    "Payroll Coordinator",
+    "Financial Analyst"
+  ],
+  "Human Resources": [
+    "HR Manager",
+    "HR Assistant",
+    "Recruitment Officer",
+    "Training Coordinator"
+  ],
+  "Maintenance & Engineering": [],
+  Security: [
+    "Security Manager",
+    "Security Guard",
+    "Surveillance Officer"
+  ],
+  IT: [
+    "IT Manager",
+    "Network Administrator",
+    "Systems Support Specialist",
+    "IT Technician"
+  ],
+  "Spa & Recreation": [
+    "Spa Manager",
+    "Spa Therapist",
+    "Fitness Instructor",
+    "Pool Attendant"
+  ],
+  "Purchasing & Supply": [
+    "Purchasing Manager",
+    "Inventory Control Officer",
+    "Procurement Specialist"
+  ]
+};
+
 
   useEffect(() => {
     const fetchStaffData = async () => {
@@ -60,41 +129,62 @@ const UpdateStaff = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setStaffData((prevState) => ({
-      ...prevState,
-      profilePic: file
-    }));
-    setImagePreview(URL.createObjectURL(file));
+    if (file) {
+      // Only set a new image if a file is selected
+      setStaffData((prevState) => ({
+        ...prevState,
+        profilePic: file,
+      }));
+  
+      // Create an object URL for the selected image to show a preview
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     const formData = new FormData();
-    
+  
+    // Add all the staff data to the form data
     Object.entries(staffData).forEach(([key, value]) => {
       if (key === "shifts") {
-        Object.entries(value).forEach(([shift, isChecked]) => 
+        // Add shift data in the proper format for the backend
+        Object.entries(value).forEach(([shift, isChecked]) =>
           formData.append(`shifts[${shift}]`, isChecked)
         );
-      } else {
+      } else if (key !== "profilePic") {
+        // Add the regular fields (excluding profilePic)
         formData.append(key, value);
       }
     });
-
-    if (staffData.profilePic) formData.append('profilePic', staffData.profilePic);
-
+  
+    // Add the profile picture if available
+    if (staffData.profilePic) {
+      formData.append("profilePic", staffData.profilePic);
+    }
+  
     try {
-      await axios.put(`http://localhost:5000/api/staff/${id}`, formData, {
+      const response = await axios.put(`http://localhost:5000/api/staff/${id}`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
-      navigate('/staff');
+  
+      // Check if the response was successful
+      if (response.status === 200) {
+        setSuccessMessage("Staff member updated successfully!");
+        setError(""); // Clear any previous errors
+        setTimeout(() => {
+          navigate("/staff");
+        }, 1500);
+      }
     } catch (err) {
-      setError('Error updating staff member');
+      setError("Error updating staff member");
       console.error(err);
     }
   };
+  
 
   return (
     <div >
@@ -138,7 +228,7 @@ const UpdateStaff = () => {
 
               {/* Contact Information */}
               <div className="grid md:grid-cols-2 gap-4">
-                {["email", "phone"].map((field) => (
+              {["email", "phone"].map((field) => (
                   <div key={field}>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       {field.charAt(0).toUpperCase() + field.slice(1)}:
@@ -153,6 +243,7 @@ const UpdateStaff = () => {
                     />
                   </div>
                 ))}
+
               </div>
 
               {/* Department and Job Title Dropdowns */}
@@ -266,8 +357,8 @@ const UpdateStaff = () => {
                       <motion.div
                         className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mb-2"
                         animate={{
-                          backgroundColor: staffData.shifts[shift] ? "#2563EB" : "#ffffff",
-                          borderColor: staffData.shifts[shift] ? "#1E3A8A" : "#9CA3AF",
+                          backgroundColor: staffData.shifts[shift] ? "#E5E4E2" : "#FFFFFF",
+                          borderColor: staffData.shifts[shift] ? "#FFFFFF" : "#9CA3AF",
                         }}
                       >
                         {staffData.shifts[shift] && (
@@ -277,11 +368,11 @@ const UpdateStaff = () => {
                             transition={{ duration: 0.3 }}
                           >
                             {shift === "morning" ? (
-                              <Sun className="text-yellow-300 w-8 h-8" />
+                              <Sun className="text-yellow-500 w-8 h-8" />
                             ) : shift === "afternoon" ? (
-                              <SunDim className="text-orange-300 w-8 h-8" />
+                              <SunDim className="text-orange-500 w-8 h-8" />
                             ) : (
-                              <Moon className="text-indigo-300 w-8 h-8" />
+                              <Moon className="text-indigo-500 w-8 h-8" />
                             )}
                           </motion.div>
                         )}
@@ -338,9 +429,9 @@ const UpdateStaff = () => {
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
          <div className="relative text-center z-10">
-           <Hotel className="w-24 h-24 text-blue-600 mx-auto mb-6" />
+           <Hotel className="w-24 h-24 text-black mx-auto mb-6" />
            <h3 className="text-2xl font-semibold text-gray-800 mb-4">Update Staff Profile</h3>
-           <p className="text-gray-600 max-w-sm mx-auto">
+           <p className="text-black max-w-sm mx-auto">
            Easily modify and manage staff member details to keep your hotel workforce information up to date.
            </p>
         </div>

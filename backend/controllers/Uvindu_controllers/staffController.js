@@ -1,9 +1,5 @@
 const Staff = require("../../models/Uvindu_models/StaffModel");
 const nodemailer = require("nodemailer");
-const ExcelJS = require("exceljs");
-const PDFDocument = require("pdfkit");
-const fs = require("fs");
-const xl = require("excel4node");
 
 // Get all staff
 exports.getAllStaff = async (req, res) => {
@@ -173,7 +169,7 @@ exports.getStaffById = async (req, res) => {
 // Update staff by ID
 exports.updateStaff = async (req, res) => {
   const { id } = req.params;
-  const { firstName, lastName, jobTitle, department, status } = req.body;
+  const { firstName, lastName, email, phone, jobTitle, department, status } = req.body;
   const profilePic = req.file ? req.file.filename : null;
 
   try {
@@ -187,6 +183,8 @@ exports.updateStaff = async (req, res) => {
     // Update the staff member's details
     staffMember.firstName = firstName || staffMember.firstName;
     staffMember.lastName = lastName || staffMember.lastName;
+    staffMember.email = email || staffMember.email; 
+    staffMember.phone = phone || staffMember.phone; 
     staffMember.jobTitle = jobTitle || staffMember.jobTitle;
     staffMember.department = department || staffMember.department;
     staffMember.status = status || staffMember.status;
