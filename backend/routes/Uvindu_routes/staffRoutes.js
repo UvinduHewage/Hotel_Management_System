@@ -36,12 +36,6 @@ router.put("/staff/:id/profilePic", upload.single("profilePic"), staffController
 router.post("/staff/attendance", staffController.updateAttendance);
 
 
-// Generate and download Excel file containing staff data
-router.get("/staff/export/excel", staffController.exportToExcel);
-
-// Generate and download PDF file containing staff data
-router.get("/staff/export/pdf", staffController.exportToPDF);
-
 
 
 module.exports = router;

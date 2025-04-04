@@ -164,10 +164,10 @@ const Dashboard = () => {
       
       // Set column widths for better readability
       if (!staffSheet['!cols']) staffSheet['!cols'] = [];
-      staffSheet['!cols'][0] = { wch: 20 }; // Name column
-      staffSheet['!cols'][1] = { wch: 25 }; // Job Title column
-      staffSheet['!cols'][2] = { wch: 20 }; // Department column
-      staffSheet['!cols'][4] = { wch: 30 }; // Email column
+      staffSheet['!cols'][0] = { wch: 20 }; 
+      staffSheet['!cols'][1] = { wch: 25 }; 
+      staffSheet['!cols'][2] = { wch: 20 }; 
+      staffSheet['!cols'][4] = { wch: 30 }; 
       
       // Style the header row
       for (let i = 0; i < staffHeaders.length; i++) {
@@ -240,8 +240,8 @@ const Dashboard = () => {
       
       // Set column widths for better readability
       if (!roleSheet['!cols']) roleSheet['!cols'] = [];
-      roleSheet['!cols'][0] = { wch: 25 }; // Department column
-      roleSheet['!cols'][1] = { wch: 30 }; // Job Title column
+      roleSheet['!cols'][0] = { wch: 25 }; 
+      roleSheet['!cols'][1] = { wch: 30 }; 
       
       // Style the header row
       for (let i = 0; i < 3; i++) {
@@ -302,11 +302,11 @@ const Dashboard = () => {
       
       // Set column widths for better readability
       if (!scheduleSheet['!cols']) scheduleSheet['!cols'] = [];
-      scheduleSheet['!cols'][0] = { wch: 20 }; // Name column
-      scheduleSheet['!cols'][1] = { wch: 25 }; // Position column
-      scheduleSheet['!cols'][2] = { wch: 15 }; // Department column
-      scheduleSheet['!cols'][3] = { wch: 20 }; // Shift Time column
-      scheduleSheet['!cols'][5] = { wch: 25 }; // Notes column
+      scheduleSheet['!cols'][0] = { wch: 20 }; 
+      scheduleSheet['!cols'][1] = { wch: 25 }; 
+      scheduleSheet['!cols'][2] = { wch: 15 }; 
+      scheduleSheet['!cols'][3] = { wch: 20 }; 
+      scheduleSheet['!cols'][5] = { wch: 25 }; 
       
       // Style the header row
       for (let i = 0; i < scheduleHeaders.length; i++) {
