@@ -1,8 +1,9 @@
 const express = require("express");
-const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const staffController = require("../../controllers/Uvindu_controllers/staffController");
+
+const router = express.Router();
 
 // Configure multer storage for file uploads
 const storage = multer.diskStorage({

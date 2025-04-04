@@ -154,7 +154,7 @@ exports.deleteStaff = async (req, res) => {
   }
 };
 
-// Export staff data to Excel
+// Export staff data to Excel - No Styles
 exports.exportToExcel = async (req, res) => {
   try {
     const staff = await Staff.find();
@@ -168,17 +168,13 @@ exports.exportToExcel = async (req, res) => {
     // Create Statistics Sheet
     const statsSheet = workbook.addWorksheet('Staff Statistics');
     
-    // Add company name or report title
+    // Add title
     statsSheet.mergeCells('A1:B1');
     statsSheet.getCell('A1').value = 'Staff Management System Report';
-    statsSheet.getCell('A1').font = { size: 16, bold: true };
-    statsSheet.getCell('A1').alignment = { horizontal: 'center' };
     
     // Add report generation date
     statsSheet.mergeCells('A2:B2');
     statsSheet.getCell('A2').value = `Generated on: ${new Date().toLocaleString()}`;
-    statsSheet.getCell('A2').font = { size: 10, italic: true };
-    statsSheet.getCell('A2').alignment = { horizontal: 'center' };
     
     // Add statistics
     statsSheet.addRow([]);
@@ -188,33 +184,11 @@ exports.exportToExcel = async (req, res) => {
     statsSheet.addRow(['Attendance Rate', `${attendanceRate}%`]);
     statsSheet.addRow(['Open Positions', openPositions]);
     
-    // Format the header row
-    statsSheet.getRow(4).font = { bold: true };
-    statsSheet.getRow(4).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF4F81BD' }
-    };
-    statsSheet.getRow(4).font = { color: { argb: 'FFFFFFFF' }, bold: true };
-    
-    // Set column widths
-    statsSheet.getColumn('A').width = 20;
-    statsSheet.getColumn('B').width = 15;
-    
     // Create Staff Details Sheet
     const detailsSheet = workbook.addWorksheet('Staff Details');
     
     // Add headers
     detailsSheet.addRow(['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Job Title', 'Department', 'Status']);
-    
-    // Format the header row
-    detailsSheet.getRow(1).font = { bold: true };
-    detailsSheet.getRow(1).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF4F81BD' }
-    };
-    detailsSheet.getRow(1).font = { color: { argb: 'FFFFFFFF' }, bold: true };
     
     // Add staff data
     staff.forEach(member => {
@@ -229,35 +203,6 @@ exports.exportToExcel = async (req, res) => {
         member.status
       ]);
     });
-    
-    // Apply conditional formatting to status column
-    detailsSheet.getColumn('H').eachCell({ includeEmpty: false }, (cell, rowNumber) => {
-      if (rowNumber > 1) {
-        if (cell.value === 'Active') {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FF92D050' } // Green
-          };
-        } else {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FFFF6347' } // Red
-          };
-        }
-      }
-    });
-    
-    // Set column widths
-    detailsSheet.getColumn('A').width = 30; // ID
-    detailsSheet.getColumn('B').width = 15; // First Name
-    detailsSheet.getColumn('C').width = 15; // Last Name
-    detailsSheet.getColumn('D').width = 30; // Email
-    detailsSheet.getColumn('E').width = 15; // Phone
-    detailsSheet.getColumn('F').width = 20; // Job Title
-    detailsSheet.getColumn('G').width = 20; // Department
-    detailsSheet.getColumn('H').width = 15; // Status
     
     // Set response headers
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -346,38 +291,6 @@ exports.exportToPDF = async (req, res) => {
   }
 };
 
-// // Update staff by ID
-// const updateStaff = async (req, res) => {
-//   const { id } = req.params;
-//   const { firstName, lastName, jobTitle, department, status, profilePic } = req.body;
-
-//   try {
-//     // Find the staff member by ID
-//     const staffMember = await Staff.findById(id);
-
-//     if (!staffMember) {
-//       return res.status(404).json({ message: "Staff member not found" });
-//     }
-
-//     // Update the staff member's details
-//     staffMember.firstName = firstName || staffMember.firstName;
-//     staffMember.lastName = lastName || staffMember.lastName;
-//     staffMember.jobTitle = jobTitle || staffMember.jobTitle;
-//     staffMember.department = department || staffMember.department;
-//     staffMember.status = status || staffMember.status;
-//     staffMember.profilePic = profilePic || staffMember.profilePic;
-
-//     // Save the updated staff member
-//     await staffMember.save();
-
-//     return res.status(200).json({ message: "Staff updated successfully", staffMember });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Server error while updating staff" });
-//   }
-// };
-
-
 exports.getStaffById = async (req, res) => {
   try {
     const staffId = req.params.id;
@@ -429,4 +342,3 @@ exports.updateStaff = async (req, res) => {
     return res.status(500).json({ message: "Server error while updating staff" });
   }
 };
-
