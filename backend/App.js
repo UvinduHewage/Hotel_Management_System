@@ -6,7 +6,7 @@ const path = require("path");
 const bawanthaRoomRoutes = require("./routes/Bawantha_routes/roomRoutes");
 const tharindaRoomRoutes = require("./routes/Tharinda_routes/roomRoutes");
 const bookingRoutes = require("./routes/Bawantha_routes/bookingRoutes");
-// const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes"); // Uncomment if needed
+const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes"); // Uncomment if needed
 
 const app = express();
 
@@ -19,8 +19,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 console.log(" App.js Loaded");
 
 // Routes
-app.use("/api/rooms/bawantha", bawanthaRoomRoutes);
-app.use("/api/rooms/tharinda", tharindaRoomRoutes);
+app.use("/api/rooms", roomRoutes); 
 
 
 app.use("/api/bookings", bookingRoutes);
