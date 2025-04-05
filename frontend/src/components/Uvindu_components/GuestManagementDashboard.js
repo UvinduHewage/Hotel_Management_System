@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Bed, DollarSign, Megaphone, CalendarCheck, PlusCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 const HotelManagementDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [stats, setStats] = useState({
     totalGuests: 0,
-    availableRooms: 20,
+    availableRooms: 0,
     todaysRevenue: 0,
     todaysBookings: 0,
   });

@@ -710,7 +710,7 @@ const Dashboard = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h3 className={`text-sm font-medium text-${stat.color}-600 mb-2`}>
+                <h3 className={`text-sm font-small text-${stat.color}-600 mb-2`}>
                   {stat.title}
                 </h3>
                 <p className={`text-2xl font-bold text-${stat.color}-800`}>

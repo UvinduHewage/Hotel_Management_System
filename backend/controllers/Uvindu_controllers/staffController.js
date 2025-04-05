@@ -12,6 +12,7 @@ exports.getAllStaff = async (req, res) => {
   }
 };
 
+// add
 exports.addStaff = async (req, res) => {
   const { firstName, lastName, email, phone, jobTitle, department, shifts } = req.body;
   const profilePic = req.file ? req.file.filename : null;

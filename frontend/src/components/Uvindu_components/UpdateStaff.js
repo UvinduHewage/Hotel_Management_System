@@ -187,7 +187,7 @@ const departments = {
   
 
   return (
-    <div >
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="container mx-auto grid md:grid-cols-2 gap-8 bg-white shadow-2xl rounded-2xl overflow-hidden">
         {/* Form Section */}
         <motion.div 
@@ -426,7 +426,7 @@ const departments = {
         <img 
           src="https://images.unsplash.com/photo-1554009975-d74653b879f1?q=80&w=2127&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
           alt="Hotel Staff Management" 
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
          <div className="relative text-center z-10">
            <Hotel className="w-24 h-24 text-black mx-auto mb-6" />

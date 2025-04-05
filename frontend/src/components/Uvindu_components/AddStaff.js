@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, SunDim, Moon, Upload, UserPlus, ChevronDown, Building2, Hotel, CheckCircle2, AlertCircle } from "lucide-react"; 
+import { Sun, SunDim, Moon, Upload, UserPlus, ChevronDown, Building2, Hotel, CheckCircle2, AlertCircle, AlertTriangle, X } from "lucide-react"; 
 import axios from "axios";
-import { toast, Toaster } from "react-hot-toast";
 
 
 const AddStaff = () => {
@@ -19,6 +18,17 @@ const AddStaff = () => {
   const [image, setImage] = useState(null);
   const [isDepartmentOpen, setIsDepartmentOpen] = useState(false);
   const [isJobTitleOpen, setIsJobTitleOpen] = useState(false);
+  const [toast, setToast] = useState(null); 
+
+  const showToast = (type, message) => {
+    setToast({ type, message });
+    setTimeout(() => {
+      setToast(null);
+    }, 4000);
+  };
+
+  const closeToast = () => setToast(null);
+
 
   const departments = {
     "Front Office": [
@@ -109,7 +119,7 @@ const AddStaff = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formDataToSend = new FormData();
-
+  
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "shifts") {
         Object.entries(value).forEach(([shift, isChecked]) => 
@@ -119,36 +129,19 @@ const AddStaff = () => {
         formDataToSend.append(key, value);
       }
     });
-
-    if (image) formDataToSend.append("profilePic", image);
-
+  
+    if (image) {
+      formDataToSend.append("profilePic", image);
+    }
+  
     try {
       const response = await axios.post("http://localhost:5000/api/staff", formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       if (response.status === 201) {
-        
-        toast.success(
-          <div className="flex items-center">
-            <CheckCircle2 className="mr-2 text-green-600" />
-            Staff Member Added Successfully!
-          </div>,
-          {
-            duration: 4000,
-            position: 'top-right',
-            style: {
-              background: '#f0f9ff',
-              color: '#1e3a8a',
-              border: '1px solid #60a5fa',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-            }
-          }
-        );
-
-
+        showToast("success", "Staff Member Added Successfully!");
+  
         setFormData({
           firstName: "",
           lastName: "",
@@ -161,32 +154,44 @@ const AddStaff = () => {
         setImage(null);
       }
     } catch (error) {
-
-      toast.error(
-        <div className="flex items-center">
-          <AlertCircle className="mr-2 text-red-600" />
-          {error.response?.data?.message || "Error Adding Staff Member"}
-        </div>,
-        {
-          duration: 4000,
-          position: 'top-right',
-          style: {
-            background: '#fff0f0',
-            color: '#7f1d1d',
-            border: '1px solid #fca5a5',
-            borderRadius: '12px',
-            padding: '16px',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-          }
-        }
-      );
       console.error("Error adding staff:", error);
+      showToast("error", error.response?.data?.message || "Error Adding Staff Member");
     }
+  };
+  
+  const Toast = ({ type, message, onClose }) => {
+    return (
+      <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 100 }}
+      className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg flex items-center space-x-3
+        ${type === 'success' 
+          ? 'bg-green-500 text-white' 
+          : 'bg-red-500 text-white'
+        }`}
+    >
+      {type === 'success' ? (
+        <CheckCircle2 size={24} />
+      ) : (
+        <AlertTriangle size={24} />
+      )}
+      <div className="flex-grow">{message}</div>
+      <button onClick={onClose} className="hover:bg-white/20 rounded-full p-1">
+        <X size={20} />
+      </button>
+    </motion.div>
+    );
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Toaster />
+      <AnimatePresence>
+        {toast && (
+          <Toast type={toast.type} message={toast.message} onClose={closeToast} />
+        )}
+      </AnimatePresence>
+      
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
@@ -199,10 +204,10 @@ const AddStaff = () => {
           <img 
             src="https://images.unsplash.com/photo-1554009975-d74653b879f1?q=80&w=2127&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
             alt="Hotel Staff Management" 
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8 text-center">
-            <Hotel className="w-24 h-24 mb-6 text-white" />
+          <div className="absolute inset-0 flex flex-col justify-center items-center text-black p-8 text-center">
+            <Hotel className="w-24 h-24 mb-6 text-black" />
             <h3 className="text-3xl font-bold mb-4">Hotel Staff Management</h3>
             <p className="text-lg opacity-80">
               Streamline your workforce management with our comprehensive staff addition system
