@@ -40,9 +40,9 @@ app.use("/api/payment", paymentRoutes);
 // app.use('/room_Images', express.static(path.join(__dirname, 'room_Images')));
 // MongoDB connection
 mongoose
-  .connect(process.env.MONGO_URI, )
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Error connecting to MongoDB:", err));
+  .catch((err) => console.error(" MongoDB Connection Error:", err));
 
 // Server setup
 const PORT = process.env.PORT || 5000;

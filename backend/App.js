@@ -1,12 +1,8 @@
 const express = require("express");
-const cors = require("cors");
-const path = require("path");
-
-// Import routes
-
-const roomRoutes = require("./routes/Bawantha_routes/roomRoutes");
+const cors = require("cors"); 
+const roomRoutes = require("./routes/Bawantha_routes/roomRoutes"); 
 const bookingRoutes = require("./routes/Bawantha_routes/bookingRoutes");
-
+const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes");
 const app = express();
 
 // Middleware
@@ -17,10 +13,14 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 
-app.use("/api/rooms", roomRoutes);
+// Define API Routes
+app.use("/api/rooms", roomRoutes); 
 app.use("/api/bookings", bookingRoutes);
 
-// Root route
+// booking history
+app.use("/api/booking-history", bookingHistoryRoutes);
+
+// Default Route for Testing
 app.get("/", (req, res) => {
   res.send("Hotel Management API is running");
 });

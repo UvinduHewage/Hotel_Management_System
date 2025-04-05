@@ -138,3 +138,26 @@ body {
     transform: rotate(360deg);
   }
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: center;
+  padding: 10px;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+button {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+
+
