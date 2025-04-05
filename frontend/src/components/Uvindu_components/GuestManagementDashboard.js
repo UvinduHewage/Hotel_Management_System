@@ -1,131 +1,203 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Bed, DollarSign, Megaphone, CalendarCheck, PlusCircle } from 'lucide-react';
+import { Users, Bed, DollarSign, Megaphone, CalendarCheck, PlusCircle, Activity, Clock, AlertCircle, ChevronRight, BarChart2, UserCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 
-const HotelManagementDashboard = () => {
+const GuestManagementDashboard = () => {
   const [bookings, setBookings] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [stats, setStats] = useState({
     totalGuests: 0,
     availableRooms: 0,
     todaysRevenue: 0,
     todaysBookings: 0,
+    occupancyRate: 0,
+    averageStayDuration: 0,
   });
+
   const [announcements, setAnnouncements] = useState([]);
   const [newAnnouncement, setNewAnnouncement] = useState({ title: '', description: '' });
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('all');
+  const [recentCheckIns, setRecentCheckIns] = useState([]);
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch('/api/bookings');
-        const data = await response.json();
-        if (data.success) {
-          setBookings(data.data);
-          const today = new Date();
-          const todaysBookings = data.data.filter(
-            (booking) => new Date(booking.checkInDate).toDateString() === today.toDateString()
+        const [bookingsRes, roomsRes, announcementsRes] = await Promise.all([
+          axios.get('http://localhost:5000/api/bookings'),
+          axios.get('http://localhost:5000/api/rooms'),
+          axios.get('http://localhost:5000/api/announcements/today'),
+        ]);
+
+        const bookingsData = bookingsRes.data;
+        const roomsData = roomsRes.data;
+        const announcementsData = announcementsRes.data;
+
+        console.log('Bookings Data:', bookingsData);
+        console.log('Rooms Data:', roomsData);
+        console.log('Announcements Data:', announcementsData);
+
+        if (bookingsData.success) {
+          setBookings(bookingsData.data);
+
+          // Get recent check-ins (last 24 hours)
+          const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+          const recentCheckins = bookingsData.data
+            .filter(booking => 
+              booking.status === "Checked-in" && 
+              new Date(booking.checkInDate) >= last24Hours
+            )
+            .slice(0, 5);
+          setRecentCheckIns(recentCheckins);
+
+          // Calculate today's data
+          const today = new Date().toDateString();
+          const todayBookings = bookingsData.data.filter(
+            (booking) => new Date(booking.checkInDate).toDateString() === today
           );
+
+          // Calculate average stay duration in days
+          const avgStayDuration = bookingsData.data.reduce((sum, booking) => {
+            const checkIn = new Date(booking.checkInDate);
+            const checkOut = new Date(booking.checkOutDate);
+            const diffTime = Math.abs(checkOut - checkIn);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return sum + diffDays;
+          }, 0) / (bookingsData.data.length || 1);
+
+          // Calculate revenue
+          const revenueToday = todayBookings.reduce((sum, b) => sum + b.price, 0);
+
+          // Calculate occupancy rate
+          const totalRooms = roomsData.success ? roomsData.data.length : 20;
+          const occupiedRooms = bookingsData.data.filter(b => 
+            b.status === "Checked-in" || b.status === "Booked"
+          ).length;
+          
+          const occupancyRate = Math.round((occupiedRooms / totalRooms) * 100);
+
+          setRooms(roomsData.success ? roomsData.data : []);
+          
           setStats({
-            totalGuests: data.data.length,
-            availableRooms: 20 - todaysBookings.length,
-            todaysRevenue: todaysBookings.reduce((sum, booking) => sum + booking.price, 0),
-            todaysBookings: todaysBookings.length,
+            totalGuests: bookingsData.data.length,
+            availableRooms: totalRooms - occupiedRooms,
+            todaysRevenue: revenueToday,
+            todaysBookings: todayBookings.length,
+            occupancyRate,
+            averageStayDuration: avgStayDuration.toFixed(1),
           });
         }
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
+
+        if (announcementsData.success) {
+          setAnnouncements(announcementsData.data);
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+      } finally {
+        setIsLoading(false);
       }
     };
+
+    fetchData();
     
-    const fetchAnnouncements = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/announcements/today');
-        const data = await response.json();
-        if (data.success) setAnnouncements(data.data);
-      } catch (error) {
-        console.error('Error fetching announcements:', error);
-      }
-    };
+    // Refresh data every 5 minutes
+    const intervalId = setInterval(fetchData, 5 * 60 * 1000);
     
-    fetchBookings();
-    fetchAnnouncements();
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleAddAnnouncement = async () => {
-    if (newAnnouncement.title && newAnnouncement.description) {
-      try {
-        const response = await fetch('http://localhost:5000/api/announcements', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newAnnouncement),
-        });
-        const data = await response.json();
-        if (data.success) {
-          setNewAnnouncement({ title: '', description: '' });
-          setAnnouncements([...announcements, newAnnouncement]);
-        }
-      } catch (error) {
-        console.error('Error creating announcement:', error);
+    if (!newAnnouncement.title || !newAnnouncement.description) return;
+
+    try {
+      const res = await axios.post('/api/announcements', newAnnouncement);
+
+      if (res.data.success) {
+        setAnnouncements([...announcements, {
+          ...newAnnouncement,
+          createdAt: new Date()
+        }]);
+        setNewAnnouncement({ title: '', description: '' });
       }
+    } catch (err) {
+      console.error('Error adding announcement:', err);
     }
   };
 
+  const filteredBookings = bookings.filter(booking => {
+    if (activeTab === 'all') return true;
+    return booking.status.toLowerCase() === activeTab;
+  });
+
+  const statsConfig = [
+    { label: 'Total Guests', icon: Users, value: stats.totalGuests, color: 'text-blue-600', bgColor: 'bg-blue-100' },
+    { label: 'Available Rooms', icon: Bed, value: stats.availableRooms, color: 'text-green-600', bgColor: 'bg-green-100' },
+    { label: "Today's Revenue", icon: DollarSign, value: `$${stats.todaysRevenue.toFixed(2)}`, color: 'text-indigo-600', bgColor: 'bg-indigo-100' },
+    { label: "Today's Bookings", icon: CalendarCheck, value: stats.todaysBookings, color: 'text-purple-600', bgColor: 'bg-purple-100' },
+    { label: "Occupancy Rate", icon: Activity, value: `${stats.occupancyRate}%`, color: 'text-orange-600', bgColor: 'bg-orange-100' },
+    { label: "Avg. Stay Duration", icon: Clock, value: `${stats.averageStayDuration} days`, color: 'text-teal-600', bgColor: 'bg-teal-100' },
+  ];
+
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { 
-        delayChildren: 0.3,
-        staggerChildren: 0.2 
-      }
-    }
+      transition: { delayChildren: 0.3, staggerChildren: 0.2 },
+    },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
+    visible: {
+      y: 0,
       opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100
-      }
-    }
+      transition: { type: 'spring', stiffness: 100 },
+    },
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
-    <motion.div 
+    <motion.div
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen p-8 max-w-7xl mx-auto"
+      className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50"
     >
-      <motion.h1 
-        variants={itemVariants}
-        className="text-4xl font-extrabold text-gray-800 mb-8 text-center"
-      >
-        Hotel Management Dashboard
-      </motion.h1>
+      <motion.div variants={itemVariants} className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-800">
+          Guest Management Dashboard
+        </h1>
+        <div className="text-sm text-gray-500">
+          <Clock className="inline mr-2" size={16} />
+          Last updated: {new Date().toLocaleTimeString()}
+        </div>
+      </motion.div>
 
-      {/* Key Statistics */}
-      <motion.div 
+      {/* Dashboard Stats */}
+      <motion.div
         variants={containerVariants}
-        className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8"
       >
-        {[
-          { icon: Users, label: 'Total Guests', value: stats.totalGuests, color: 'text-blue-600' },
-          { icon: Bed, label: 'Available Rooms', value: stats.availableRooms, color: 'text-green-600' },
-          { icon: DollarSign, label: "Today's Revenue", value: `$${stats.todaysRevenue.toFixed(2)}`, color: 'text-indigo-600' },
-          { icon: CalendarCheck, label: "Today's Bookings", value: stats.todaysBookings, color: 'text-purple-600' },
-        ].map(({ icon: Icon, label, value, color }, index) => (
-          <motion.div 
-            key={index} 
+        {statsConfig.map(({ label, icon: Icon, value, color, bgColor }, idx) => (
+          <motion.div
+            key={idx}
             variants={itemVariants}
-            whileHover={{ scale: 1.05 }}
-            className={`p-6 rounded-xl shadow-lg bg-white border-l-4 ${color} transform transition-all duration-300`}
+            whileHover={{ scale: 1.03 }}
+            className={`p-5 rounded-xl shadow-md bg-white border-l-4 ${color} hover:shadow-lg transition-all duration-300`}
           >
             <div className="flex items-center">
-              <Icon className={`mr-4 ${color} text-4xl`} />
+              <div className={`${bgColor} p-3 rounded-full mr-4`}>
+                <Icon className={`${color}`} size={24} />
+              </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">{label}</h3>
                 <p className="text-2xl font-bold text-gray-800">{value}</p>
@@ -135,74 +207,222 @@ const HotelManagementDashboard = () => {
         ))}
       </motion.div>
 
-      {/* Announcements Section */}
-      <motion.div 
-        variants={containerVariants}
-        className="grid grid-cols-1 md:grid-cols-2 gap-8"
-      >
-        {/* Existing Announcements */}
-        <motion.div 
-          variants={itemVariants}
-          className="bg-white rounded-xl shadow-lg p-6 border"
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Announcements Section */}
+        <motion.div
+          variants={containerVariants}
+          className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <div className="flex items-center mb-4">
-            <Megaphone className="mr-2 text-blue-600 text-2xl" />
-            <h2 className="text-xl font-semibold text-gray-800">Recent Announcements</h2>
-          </div>
-          <div className="space-y-4 max-h-64 overflow-y-auto">
-            {announcements.map((announcement, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 transition-colors"
+          {/* Recent Announcements */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
+          >
+            <div className="flex items-center mb-4">
+              <Megaphone className="mr-2 text-blue-600" size={24} />
+              <h2 className="text-xl font-semibold text-gray-800">Recent Announcements</h2>
+            </div>
+            <div className="space-y-4 max-h-64 overflow-y-auto">
+              {announcements.length > 0 ? (
+                announcements.map((announcement, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-gray-100 p-4 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    <h3 className="font-bold text-gray-800">{announcement.title}</h3>
+                    <p className="text-sm text-gray-600 mt-2">{announcement.description}</p>
+                    <span className="text-xs text-gray-500 block mt-2">
+                      {new Date(announcement.createdAt || Date.now()).toLocaleDateString()}
+                    </span>
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center py-6">No announcements today</p>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Create New Announcement */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
+          >
+            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <PlusCircle className="mr-2 text-blue-600" size={24} /> Create New Announcement
+            </h2>
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Announcement Title"
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 transition-all"
+                value={newAnnouncement.title}
+                onChange={(e) => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })}
+              />
+              <textarea
+                placeholder="Announcement Description"
+                className="w-full p-3 border rounded-lg h-24 focus:ring-2 focus:ring-blue-500 transition-all"
+                value={newAnnouncement.description}
+                onChange={(e) => setNewAnnouncement({ ...newAnnouncement, description: e.target.value })}
+              ></textarea>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleAddAnnouncement}
+                className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                <h3 className="font-bold text-gray-800">{announcement.title}</h3>
-                <p className="text-sm text-gray-600 mt-2">{announcement.description}</p>
-                <span className="text-xs text-gray-500 block mt-2">
-                  {new Date().toLocaleDateString()}
-                </span>
-              </motion.div>
-            ))}
-          </div>
+                Add Announcement
+              </motion.button>
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Add Announcement Form */}
-        <motion.div 
+        {/* Recent Check-ins */}
+        <motion.div
           variants={itemVariants}
-          className="bg-white rounded-xl shadow-lg p-6 border"
+          className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
         >
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <PlusCircle className="mr-2 text-blue-600" /> Create New Announcement
-          </h2>
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Announcement Title"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 transition-all"
-              value={newAnnouncement.title}
-              onChange={(e) => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })}
-            />
-            <textarea
-              placeholder="Announcement Description"
-              className="w-full p-3 border rounded-lg h-24 focus:ring-2 focus:ring-blue-500 transition-all"
-              value={newAnnouncement.description}
-              onChange={(e) => setNewAnnouncement({ ...newAnnouncement, description: e.target.value })}
-            ></textarea>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleAddAnnouncement} 
-              className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Add Announcement
-            </motion.button>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+              <UserCheck className="mr-2 text-green-600" size={24} /> Recent Check-ins
+            </h2>
+            <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Last 24h</span>
           </div>
+          
+          <div className="space-y-3">
+            {recentCheckIns.length > 0 ? (
+              recentCheckIns.map((checkin, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <div className="bg-blue-100 text-blue-800 p-2 rounded-full mr-3">
+                    <Users size={16} />
+                  </div>
+                  <div className="flex-grow">
+                    <p className="font-medium text-gray-800">{checkin.customerName}</p>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <span className="mr-2">Room {checkin.roomNumber}</span>
+                      <span className="mr-2">•</span>
+                      <span>{new Date(checkin.checkInDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-bold text-gray-900">${checkin.price}</div>
+                    <div className="text-xs text-gray-500">{checkin.roomType}</div>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-8">No recent check-ins</p>
+            )}
+          </div>
+
+          {recentCheckIns.length > 0 && (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              className="w-full mt-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center justify-center"
+            >
+              View all check-ins <ChevronRight size={16} className="ml-1" />
+            </motion.button>
+          )}
         </motion.div>
+      </div>
+
+      {/* Booking Management */}
+      <motion.div variants={itemVariants} className="mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Booking Management</h2>
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+          {/* Tabs for filtering bookings */}
+          <div className="flex border-b">
+            {['all', 'booked', 'checked-in', 'completed'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`py-3 px-6 text-sm font-medium transition-colors ${
+                  activeTab === tab
+                    ? 'text-blue-600 border-b-2 border-blue-500'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {/* Bookings table */}
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guest</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check In</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check Out</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredBookings.length > 0 ? (
+                  filteredBookings.slice(0, 5).map((booking, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{booking.customerName}</div>
+                        <div className="text-sm text-gray-500">{booking.email}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">#{booking.roomNumber}</div>
+                        <div className="text-xs text-gray-500">{booking.roomType}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(booking.checkInDate).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(booking.checkOutDate).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                          ${booking.status === 'Booked' ? 'bg-yellow-100 text-yellow-800' : ''}
+                          ${booking.status === 'Checked-in' ? 'bg-green-100 text-green-800' : ''}
+                          ${booking.status === 'Completed' ? 'bg-blue-100 text-blue-800' : ''}
+                        `}>
+                          {booking.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${booking.price}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                      No bookings found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          
+          {/* View more button */}
+          {filteredBookings.length > 5 && (
+            <div className="py-3 px-6 bg-gray-50 border-t text-right">
+              <button className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center ml-auto">
+                View all bookings <ChevronRight size={16} className="ml-1" />
+              </button>
+            </div>
+          )}
+        </div>
       </motion.div>
     </motion.div>
   );
 };
 
-export default HotelManagementDashboard;
+export default GuestManagementDashboard;
