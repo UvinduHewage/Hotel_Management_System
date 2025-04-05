@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Components
-import Header from "../../components/Bawantha_components/Header";
-import Sidebar from "../../components/Bawantha_components/Sidebar";
 import ReservationHistoryTable from "../../components/Bawantha_components/ReservationHistoryTable";
 import jsPDF from "jspdf"; 
 
@@ -153,12 +151,10 @@ const ReservationHistory = () => {
   return (
     <>
       {/* Header at the top */}
-      <Header />
 
       {/* Main container with background slideshow and sidebar */}
       <div className="flex min-h-screen relative">
         <BackgroundSlideshow />
-        <Sidebar />
 
         {/* Right side content */}
         <div className="flex-1 text-sm pt-20 pl-4 pr-12 relative z-10">

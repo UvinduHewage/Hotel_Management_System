@@ -66,25 +66,25 @@ function App() {
 
             {/* Bawantha Routes..................................................*/}
 
-        <Route path="/bookingHome" element={<AvailableRooms />} /> 
-        <Route path="/booked-rooms" element={<BookedRooms />} />
-        <Route path="/reservation-history" element={<ReservationHistory />} />
-        <Route path="/booking/:roomNumber" element={<BookingPage />} /> 
-        <Route path="/bookings/:id" element={<ViewBookingPage />} />\
-        <Route path="/bookings/:id/edit" element={<UpdateBookingPage />} /> 
+            <Route path="/bookingHome" element={<AvailableRooms />} /> 
+            <Route path="/booked-rooms" element={<BookedRooms />} />
+            <Route path="/reservation-history" element={<ReservationHistory />} />
+            <Route path="/booking/:roomNumber" element={<BookingPage />} /> 
+            <Route path="/bookings/:id" element={<ViewBookingPage />} />\
+            <Route path="/bookings/:id/edit" element={<UpdateBookingPage />} /> 
 
-        {/* tharinda Routes..................................................*/}
-
-
-        <Route path="/" element={<RoomTable />} />
-
-        <Route path="/rooms/:id" element={<RoomDetail />} />
-
-        <Route path="/rooms/update/:id" element={<UpdateRoom />} />
-
-        <Route path="/create-room" element={<CreateRoom />} />
-        <Route path="/roomsUI" element={<RoomGallery />} />
-        <Route path="/room-details/:roomNumber" element={<RoomDetailsPage />} />
+            {/* tharinda Routes..................................................*/}
+    
+    
+            <Route path="/table" element={<RoomTable />} />
+    
+            <Route path="/rooms/:id" element={<RoomDetail />} />
+    
+            <Route path="/rooms/update/:id" element={<UpdateRoom />} />
+    
+            <Route path="/create-room" element={<CreateRoom />} />
+            <Route path="/roomsUI" element={<RoomGallery />} />
+            <Route path="/room-details/:roomNumber" element={<RoomDetailsPage />} />
           </Routes>
         </main>
       </div>

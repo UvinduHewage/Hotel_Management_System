@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Tharinda_components/Header";
-import Sidebar from "../../components/Tharinda_components/Sidebar";
 import jsPDF from "jspdf";
 
 const RoomTable = () => {
@@ -121,10 +119,8 @@ const RoomTable = () => {
 
   return (
     <>
-      <Header />
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
-        <Sidebar />
 
         {/* Main Content */}
         <div className="flex-1 p-6 md:p-28 bg-cover bg-center bg-no-repeat transition-all duration-700"

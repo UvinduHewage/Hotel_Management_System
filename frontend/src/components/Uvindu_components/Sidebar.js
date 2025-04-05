@@ -43,7 +43,22 @@ const Sidebar = ({ isVisible }) => {
     { 
       to: "/roomsUI", 
       icon: <CheckSquare className="mr-3" />, 
-      label: "Available Rooms" 
+      label: "UserView" 
+    },
+    { 
+      to: "/table", 
+      icon: <CheckSquare className="mr-3" />, 
+      label: "Room Details" 
+    },
+    { 
+      to: "/booked-rooms", 
+      icon: <CheckSquare className="mr-3" />, 
+      label: "Booked Rooms" 
+    },
+    { 
+      to: "/reservation-history", 
+      icon: <CheckSquare className="mr-3" />, 
+      label: "Reservation History" 
     }
   ];
 

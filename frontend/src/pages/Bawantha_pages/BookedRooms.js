@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Calendar from "../../components/Bawantha_components/Calendar";
-import Header from "../../components/Bawantha_components/Header";
-import Sidebar from "../../components/Bawantha_components/Sidebar";
 import BookedRoomsFilter from "../../components/Bawantha_components/BookedRoomsFilter";
 import BookedRoomsTable from "../../components/Bawantha_components/BookedRoomsTable";
 import RoomGrid from "../../components/Bawantha_components/RoomGrid";
@@ -29,12 +27,9 @@ const BackgroundSlideshow = () => {
       {images.map((url, index) => (
         <div
           key={url}
-          className={`
-            absolute inset-0
-            // bg-cover bg-center bg-no-repeat
-            transition-opacity duration-1000 ease-in-out
-            ${index === currentIndex ? "opacity-80" : "opacity-0"}
-          `}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === currentIndex ? "opacity-80" : "opacity-0"
+          }`}
           style={{
             backgroundImage: `url(${url})`,
             backgroundSize: "cover",
@@ -52,7 +47,6 @@ const BackgroundSlideshow = () => {
 const BookedRooms = () => {
   const [bookedRooms, setBookedRooms] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-
   const navigate = useNavigate();
 
   const fetchBookedRooms = () => {
@@ -71,29 +65,26 @@ const BookedRooms = () => {
 
   const handleFilter = ({ roomNumber, checkInDate, checkOutDate }) => {
     let filtered = [...originalData];
-  
+
     if (roomNumber.trim()) {
       filtered = filtered.filter((room) =>
         room.roomNumber.toLowerCase().includes(roomNumber.toLowerCase())
       );
     }
-  
+
     if (checkInDate && checkOutDate) {
       const filterStart = new Date(checkInDate);
       const filterEnd = new Date(checkOutDate);
-  
+
       filtered = filtered.filter((booking) => {
         const bookingStart = new Date(booking.checkInDate);
         const bookingEnd = new Date(booking.checkOutDate);
-  
-        // Check if booking overlaps with filter range
         return bookingStart <= filterEnd && bookingEnd >= filterStart;
       });
     }
-  
+
     setBookedRooms(filtered);
   };
-  
 
   const handleRoomClick = (roomNumber) => {
     const booking = bookedRooms.find((r) => r.roomNumber === roomNumber);
@@ -106,17 +97,12 @@ const BookedRooms = () => {
 
   return (
     <>
-      <Header />
-
       <div className="flex min-h-screen relative">
         <BackgroundSlideshow />
-        <Sidebar />
-
         <div className="flex-1 text-sm pt-20 pl-4 pr-12 relative z-10">
           <div className="bg-white p-2 shadow-md rounded-lg mb-4">
             <BookedRoomsFilter onFilter={handleFilter} />
           </div>
-
           <div className="flex gap-4">
             <div className="w-3/4 bg-white/95 p-5 shadow-md rounded-lg">
               <BookedRoomsTable
@@ -124,9 +110,8 @@ const BookedRooms = () => {
                 refreshBookings={fetchBookedRooms}
               />
             </div>
-
             <div className="w-1/4 bg-white p-5 shadow-md rounded-lg">
-            <h3 className="text-xl font-semibold mb-4">All Rooms</h3>
+              <h3 className="text-xl font-semibold mb-4">All Rooms</h3>
               <RoomGrid
                 rooms={bookedRooms}
                 mode="booked"
@@ -134,9 +119,11 @@ const BookedRooms = () => {
                 onRoomClick={handleRoomClick}
               />
               <div className="mt-28">
-    <h3 className="text-lg font-semibold mb-5">Availability Calendar</h3>
-    <Calendar onDateSelect={(date) => console.log("Selected date:", date)} />
-  </div>
+                <h3 className="text-lg font-semibold mb-5">
+                  Availability Calendar
+                </h3>
+                <Calendar onDateSelect={(date) => console.log("Selected date:", date)} />
+              </div>
             </div>
           </div>
         </div>

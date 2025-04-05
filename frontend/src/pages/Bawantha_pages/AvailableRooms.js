@@ -5,8 +5,6 @@ import Calendar from "../../components/Bawantha_components/Calendar";
 
 
 // Components
-import Header from "../../components/Bawantha_components/Header";
-import Sidebar from "../../components/Bawantha_components/Sidebar";
 import AvailableRoomsTable from "../../components/Bawantha_components/AvailableRoomsTable";
 import RoomGrid from "../../components/Bawantha_components/RoomGrid";
 import Filters from "../../components/Bawantha_components/Filters";
@@ -113,11 +111,9 @@ const AvailableRooms = () => {
 
   return (
     <>
-      <Header />
 
       <div className="flex min-h-screen relative">
         <BackgroundSlideshow />
-        <Sidebar />
 
         <div className="flex-1 text-sm pt-20 pl-4 pr-12 relative z-10">
           <div className="bg-white p-2 shadow-md rounded-lg mb-4">

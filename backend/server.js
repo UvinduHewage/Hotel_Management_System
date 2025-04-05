@@ -7,7 +7,8 @@ const staffRoutes = require("./routes/Uvindu_routes/staffRoutes");
 const authRoutes = require("./routes/Uvindu_routes/LoginRoutes");
 const announcementRoutes = require("./routes/Uvindu_routes/announcementsRoutes");
 
-const app = express();
+const app = require("./App");  
+
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api", staffRoutes); 
-app.use("/api/auth", authRoutes); // Ensure correct routing
+app.use("/api/auth", authRoutes); 
 app.use("/api", announcementRoutes);
 
 // Connect to MongoDB

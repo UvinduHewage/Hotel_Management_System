@@ -4,8 +4,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUser, FaIdCard, FaEnvelope, FaPhone, FaCalendarCheck, FaVenusMars } from "react-icons/fa";
 
-import Header from "../../components/Bawantha_components/Header";
-import Sidebar from "../../components/Bawantha_components/Sidebar";
 
 const UpdateBookingPage = () => {
   const { id } = useParams();
@@ -125,7 +123,6 @@ const UpdateBookingPage = () => {
 
   return (
     <>
-      <Header />
       <div
         className="flex min-h-screen bg-cover bg-center bg-no-repeat relative "
         style={{
@@ -134,7 +131,6 @@ const UpdateBookingPage = () => {
       >
         <div className="absolute inset-0 backdrop-blur-md bg-black bg-opacity-20"></div>
 
-        <Sidebar />
         <div className="flex-1 p-14 relative z-10 flex justify-center">
           {loading ? (
             <p className="p-6 text-white text-xl font-semibold">Loading booking details...</p>
