@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Uvindu_components/Sidebar";
 import Header from "./components/Uvindu_components/Header"; 
 import Dashboard from "./components/Uvindu_components/Dashboard";
@@ -11,8 +11,6 @@ import GuestManagementDashboard from "./components/Uvindu_components/GuestManage
 import UpdateStaff from "./components/Uvindu_components/UpdateStaff";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
 
