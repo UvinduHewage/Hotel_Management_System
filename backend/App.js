@@ -3,10 +3,9 @@ const cors = require("cors");
 const path = require("path");
 
 // Import routes
-const bawanthaRoomRoutes = require("./routes/Bawantha_routes/roomRoutes");
-const tharindaRoomRoutes = require("./routes/Tharinda_routes/roomRoutes");
+const roomRoutes = require("./routes/Tharinda_routes/roomRoutes"); 
 const bookingRoutes = require("./routes/Bawantha_routes/bookingRoutes");
-const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes"); // Uncomment if needed
+const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes");
 
 const app = express();
 
@@ -23,22 +22,12 @@ app.use("/api/rooms", roomRoutes);
 
 
 app.use("/api/bookings", bookingRoutes);
-app.use("/api/booking-history", bookingHistoryRoutes); // Uncomment if needed
+app.use("/api/booking-history", bookingHistoryRoutes);
 
 // Root route
 app.get("/", (req, res) => {
   res.send("Hotel Management API is running");
 });
-
-
-
-
-
-
-
-
-
-
 
 
 
