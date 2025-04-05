@@ -1,8 +1,10 @@
 const express = require("express");
 const cors = require("cors"); 
+
+
+//Tharinda ................................................................
 const roomRoutes = require("./routes/Tharinda_routes/roomRoutes"); 
-// const bookingRoutes = require("./routes/Tharinda_routes/bookingRoutes");
-// const bookingHistoryRoutes = require("./routes/Tharinda_routes/bookingHistoryRoutes");
+
 const app = express();
 
 // Middleware
@@ -14,14 +16,37 @@ console.log(" App.js Loaded");
 
 // Define API Routes
 app.use("/api/rooms", roomRoutes); 
-// app.use("/api/bookings", bookingRoutes);
+
+
+
+//Bawantha......................................................................
+
+const bookingRoutes = require("./routes/Bawantha_routes/bookingRoutes");
+const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes");
+
+// Define API Routes
+
+app.use("/api/bookings", bookingRoutes);
 
 // booking history
-// app.use("/api/booking-history", bookingHistoryRoutes);
+app.use("/api/booking-history", bookingHistoryRoutes);
+
 
 // Default Route for Testing
 app.get("/", (req, res) => {
   res.send("Hotel Booking API is Running!");
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = app;
