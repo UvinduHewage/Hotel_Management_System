@@ -25,7 +25,7 @@ const BookingPage = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/rooms/summary")
+    axios.get("http://localhost:5000/api/rooms")
       .then((response) => {
         if (response.data.success) {
           const room = response.data.data.find(r => r.roomNumber === roomNumber);
@@ -207,7 +207,7 @@ const BookingPage = () => {
                     <button
                       type="button"
                       className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-                      onClick={() => navigate("/")}
+                      onClick={() => navigate("/bookingHome")}
                     >
                       Cancel
                     </button>
