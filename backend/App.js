@@ -30,4 +30,16 @@ app.get("/", (req, res) => {
   res.send("Hotel Management API is running");
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = app;
