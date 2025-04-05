@@ -19,7 +19,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/"
+                to="/bookingHome"
                 className="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-white transition rounded-md"
               >
                 Available Rooms 
