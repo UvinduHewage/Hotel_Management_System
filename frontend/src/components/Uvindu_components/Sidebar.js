@@ -5,7 +5,12 @@ import {
   LayoutDashboard, 
   Users, 
   UserPlus, 
-  CheckSquare
+  CheckSquare,
+  Grid2x2Check,
+  ScanSearch,
+  ChartNoAxesGantt,
+  NotebookTabs,
+  FileClock
 } from "lucide-react";
 
 const Sidebar = ({ isVisible }) => {
@@ -22,7 +27,7 @@ const Sidebar = ({ isVisible }) => {
     },
     { 
       to: "/staff", 
-      icon: <Users className="mr-3" />, 
+      icon: <NotebookTabs className="mr-3" />, 
       label: "Staff Management" 
     },
     { 
@@ -37,17 +42,17 @@ const Sidebar = ({ isVisible }) => {
     },
     { 
       to: "/bookingHome", 
-      icon: <CheckSquare className="mr-3" />, 
+      icon: <Grid2x2Check className="mr-3" />, 
       label: "Available Rooms" 
     },
     { 
       to: "/roomsUI", 
-      icon: <CheckSquare className="mr-3" />, 
-      label: "UserView" 
+      icon: <ScanSearch className="mr-3" />, 
+      label: "Browse Rooms" 
     },
     { 
       to: "/table", 
-      icon: <CheckSquare className="mr-3" />, 
+      icon: <ChartNoAxesGantt className="mr-3" />, 
       label: "Room Details" 
     },
     { 
@@ -57,7 +62,7 @@ const Sidebar = ({ isVisible }) => {
     },
     { 
       to: "/reservation-history", 
-      icon: <CheckSquare className="mr-3" />, 
+      icon: <FileClock className="mr-3" />, 
       label: "Reservation History" 
     }
   ];
