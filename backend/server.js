@@ -10,10 +10,10 @@ const paymentRoutes = require("./routes/Dineth_routes/paymentRoutes");
 
 // const bookingRoutes = require("./routes/Booking_routes/booking");
 
+const app = require("./App");
 
 
-
-const app = express();
+// const app = express();
 
 dotenv.config();
 
