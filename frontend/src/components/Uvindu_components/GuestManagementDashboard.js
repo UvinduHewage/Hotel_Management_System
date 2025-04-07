@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Bed, DollarSign, Megaphone, CalendarCheck, PlusCircle, Activity, Clock, AlertCircle, ChevronRight, BarChart2, UserCheck } from 'lucide-react';
+import { Users, Bed, Wallet, Megaphone, CalendarCheck, PlusCircle, Activity, Clock, AlertCircle, ChevronRight, BarChart2, UserCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 
@@ -134,7 +134,7 @@ const GuestManagementDashboard = () => {
   const statsConfig = [
     { label: 'Total Guests', icon: Users, value: stats.totalGuests, color: 'text-blue-600', bgColor: 'bg-blue-100' },
     { label: 'Available Rooms', icon: Bed, value: stats.availableRooms, color: 'text-green-600', bgColor: 'bg-green-100' },
-    { label: "Today's Revenue", icon: DollarSign, value: `$${stats.todaysRevenue.toFixed(2)}`, color: 'text-indigo-600', bgColor: 'bg-indigo-100' },
+    { label: "Today's Revenue", icon: Wallet, value: `LKR ${stats.todaysRevenue.toFixed(2)}`, color: 'text-indigo-600', bgColor: 'bg-indigo-100' },
     { label: "Today's Bookings", icon: CalendarCheck, value: stats.todaysBookings, color: 'text-purple-600', bgColor: 'bg-purple-100' },
     { label: "Occupancy Rate", icon: Activity, value: `${stats.occupancyRate}%`, color: 'text-orange-600', bgColor: 'bg-orange-100' },
     { label: "Avg. Stay Duration", icon: Clock, value: `${stats.averageStayDuration} days`, color: 'text-teal-600', bgColor: 'bg-teal-100' },
@@ -207,7 +207,7 @@ const GuestManagementDashboard = () => {
         ))}
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 mb-0">
         {/* Announcements Section */}
         <motion.div
           variants={containerVariants}
@@ -280,16 +280,7 @@ const GuestManagementDashboard = () => {
         </motion.div>
 
         {/* Recent Check-ins */}
-        <motion.div
-          variants={itemVariants}
-          className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-              <UserCheck className="mr-2 text-green-600" size={24} /> Recent Check-ins
-            </h2>
-            <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Last 24h</span>
-          </div>
+        <motion.div>
           
           <div className="space-y-3">
             {recentCheckIns.length > 0 ? (
@@ -319,7 +310,7 @@ const GuestManagementDashboard = () => {
                 </motion.div>
               ))
             ) : (
-              <p className="text-gray-500 text-center py-8">No recent check-ins</p>
+              <p className="text-gray-500 text-center py-5"></p>
             )}
           </div>
 

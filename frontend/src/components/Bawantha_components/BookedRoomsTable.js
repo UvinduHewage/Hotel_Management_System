@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -54,23 +53,25 @@ const BookedRoomsTable = ({ bookedRooms, refreshBookings }) => {
                 <td className="border p-2">{room.roomNumber}</td>
                 <td className="border p-2">{room.nic}</td>
                 <td className="border p-2">{room.customerName}</td>
-                <td className="border p-2 flex justify-center space-x-2">
-                  <Link to={`/bookings/${room._id}`}>
-                    <button className="bg-green-500 shadow-md rounded-md text-white px-3 py-1 hover:bg-green-600">
-                      View
+                <td className="border p-2">
+                  <div className="flex flex-col space-y-2 items-center justify-center">
+                    <Link to={`/bookings/${room._id}`} className="w-full">
+                      <button className="bg-green-500 shadow-md rounded-md text-white px-3 py-1 hover:bg-green-600 w-full">
+                        View
+                      </button>
+                    </Link>
+                    <Link to={`/bookings/${room._id}/edit`} className="w-full">
+                      <button className="bg-yellow-500 text-white shadow-md rounded-md px-3 py-1 hover:bg-yellow-600 w-full">
+                        Update
+                      </button>
+                    </Link>
+                    <button
+                      className="bg-red-500 shadow-md rounded-md text-white px-3 py-1 hover:bg-red-600 w-full"
+                      onClick={() => confirmDelete(room._id, room.roomNumber)}
+                    >
+                      Delete
                     </button>
-                  </Link>
-                  <Link to={`/bookings/${room._id}/edit`}>
-                    <button className="bg-yellow-500 text-white shadow-md rounded-md px-3 py-1 hover:bg-yellow-600">
-                      Update
-                    </button>
-                  </Link>
-                  <button
-                    className="bg-red-500 shadow-md rounded-md text-white px-3 py-1 hover:bg-red-600"
-                    onClick={() => confirmDelete(room._id, room.roomNumber)}
-                  >
-                    Delete
-                  </button>
+                  </div>
                 </td>
               </tr>
             ))
