@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   
   // Company logo URL - update this with your actual logo path
-  const companyLogo = "https://www.postermywall.com/index.php/art/template/e5520a805026e9d9a5dd660cf83185ba/hotel-logo-design-template"; // Path to your logo
+  const companyLogo = "https://www.postermywall.com/index.php/art/template/e5520a805026e9d9a5dd660cf83185ba/hotel-logo-design-template"; 
 
   useEffect(() => {
     fetchStaffData();
@@ -598,7 +598,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="fixed inset-0 flex justify-center items-center bg-white z-50">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ 

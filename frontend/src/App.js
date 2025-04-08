@@ -9,6 +9,7 @@ import StaffAttendance from "./components/Uvindu_components/StaffAttendance";
 import StaffDataExport from "./components/Uvindu_components/staffDataExport"; 
 import GuestManagementDashboard from "./components/Uvindu_components/GuestManagementDashboard";
 import UpdateStaff from "./components/Uvindu_components/UpdateStaff";
+import HomePage from "./components/Uvindu_components/Home";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -40,10 +41,20 @@ import CreateRoom from "./pages/Tharinda_pages/CreateRoom";
 
 function App() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [showNavigation, setShowNavigation] = useState(false);
+
 
   const handleSidebarToggle = () => {
     setIsSidebarVisible((prevState) => !prevState);
   };
+
+  const handleEnterSystem = () => {
+    setShowNavigation(true);
+  };
+
+  if (!showNavigation) {
+    return <HomePage onEnterSystem={handleEnterSystem} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
