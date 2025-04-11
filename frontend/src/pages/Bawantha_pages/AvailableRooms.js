@@ -223,15 +223,7 @@ const AvailableRooms = () => {
             </div>
           </motion.div>
         </div>
-        
-        <motion.footer
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8 text-center text-gray-500 text-sm py-4"
-        >
-          <p>Hotel Management System © {new Date().getFullYear()}</p>
-        </motion.footer>
+      
       </div>
     </div>
   );

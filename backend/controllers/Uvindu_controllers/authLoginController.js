@@ -1,79 +1,86 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../../models/Uvindu_models/User");
-require("dotenv").config();
+//controllers/Uvindu_controllers/authLoginController
 
-const { JWT_SECRET } = process.env;
+const User = require('../../models/Uvindu_models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-// User Registration
-const registerUser = async (req, res) => {
+// Register User
+const signup = async (req, res) => {
+  const { username, email, password, adminCode } = req.body;
   try {
-    const { name, email, password, role } = req.body;
-
-    // Validate request data
-    if (!name || !email || !password || !role) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
+    if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create new user
-    const newUser = new User({
-      name,
-      email,
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Check if admin code is provided and valid
+    let role = 'user';
+    if (adminCode && adminCode === process.env.ADMIN_SECRET_CODE) {
+      role = 'admin';
+    }
+    
+    const user = new User({ 
+      username, 
+      email, 
       password: hashedPassword,
-      role,
+      role
     });
-
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    
+    await user.save();
+    res.status(201).json({ 
+      message: 'User created successfully', 
+      isAdmin: role === 'admin'
+    });
+  } catch (err) {
+    console.error('Signup error:', err);
+    res.status(500).json({ message: 'Error registering user' });
   }
 };
 
-// User Login
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+// Login User - remains the same
+const login = async (req, res) => {
+  const { emailOrUsername, password } = req.body;
   try {
-    // Validate request data
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
-    }
+    const user = await User.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }]
+    });
+    if (!user) return res.status(400).json({ message: 'User not found' });
 
-    // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
-
-    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    // Generate JWT Token
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
     );
-
-    // Send response with token and user role
-    res.status(200).json({
-      message: "Login successful",
-      token,
-      role: user.role,
+    res.json({ 
+      token, 
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        email: user.email,
+        role: user.role 
+      } 
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Error logging in' });
   }
 };
 
-module.exports = { registerUser, loginUser };
+// Verify Token - remains the same
+const verifyToken = (req, res) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ message: 'No token provided' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ valid: true, userId: decoded.id, role: decoded.role });
+  } catch (err) {
+    console.error('Token verification error:', err);
+    res.status(401).json({ valid: false });
+  }
+};
+
+module.exports = { signup, login, verifyToken };

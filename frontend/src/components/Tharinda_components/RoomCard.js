@@ -21,9 +21,9 @@ const RoomCard = ({ room }) => {
         />
         <div
           className={`absolute top-2 left-2 px-3 py-1 text-xs font-semibold rounded-full shadow 
-          ${!room.availability ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
+          ${room.availability ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
         >
-          {!room.availability ? "Available" : "Booked"}
+          {room.availability ? "Available" : "Booked"}
         </div>
       </div>
 

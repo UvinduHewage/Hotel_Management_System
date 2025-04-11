@@ -1,10 +1,12 @@
-const mongoose = require("mongoose");
+//models/Uvindu_models/User.js
 
-const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ["admin", "customer"], required: true }
+  role: { type: String, enum: ['user', 'admin'], default: 'user' } 
 });
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model('User', userSchema);

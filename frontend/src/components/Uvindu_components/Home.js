@@ -1,7 +1,8 @@
+// src/components/Uvindu_components/Home.js - Updated home page component with animations (header removed)
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Hotel, ChevronRight, Star, Clock, Users, Coffee } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Hotel, ChevronRight, Star, Clock, Users, Coffee, LogIn, UserPlus } from 'lucide-react';
 
 const HomePage = ({ onEnterSystem }) => {
   const [showLoader, setShowLoader] = useState(true);
@@ -85,6 +86,8 @@ const HomePage = ({ onEnterSystem }) => {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 relative overflow-hidden">
+      {/* Header has been removed */}
+      
       {/* 3D Loader Animation */}
       {showLoader && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -148,9 +151,9 @@ const HomePage = ({ onEnterSystem }) => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="container mx-auto px-4 py-16"
+          className="container mx-auto px-4 py-8"
         >
-          <div className="flex flex-col items-center justify-center min-h-[80vh]">
+          <div className="flex flex-col items-center justify-center min-h-screen">
             {/* Hero Section */}
             <motion.div variants={itemVariants} className="text-center mb-16">
               <motion.div 
@@ -172,15 +175,23 @@ const HomePage = ({ onEnterSystem }) => {
               <motion.p variants={itemVariants} className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
                 A comprehensive solution to streamline your hotel operations and enhance guest experiences
               </motion.p>
-              <motion.button
-                variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleEnterSystem}
-                className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium flex items-center mx-auto hover:bg-indigo-700 transition-colors"
-              >
-                Enter System <ChevronRight className="ml-2" />
-              </motion.button>
+              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleEnterSystem}
+                  className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center hover:bg-indigo-700 transition-colors"
+                >
+                  Enter System <ChevronRight className="ml-2" />
+                </motion.button>
+                <Link
+                  to="/signup"
+                  className="px-8 py-3 bg-white text-indigo-600 border border-indigo-600 rounded-lg font-medium hover:bg-indigo-50 transition flex items-center justify-center"
+                >
+                  <UserPlus size={18} className="mr-2" />
+                  Create Account
+                </Link>
+              </motion.div>
             </motion.div>
             
             {/* Feature Cards */}
@@ -200,14 +211,24 @@ const HomePage = ({ onEnterSystem }) => {
                 </motion.div>
               ))}
             </motion.div>
-            
-            {/* Background Decoration Elements */}
-            <div className="absolute top-20 right-20 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-            <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-            <div className="absolute bottom-40 right-40 w-64 h-64 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
           </div>
+          
+          {/* Footer */}
+          <motion.footer
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5 }}
+            className="mt-16 pt-6 border-t border-gray-200 text-center text-gray-500"
+          >
+            <p>&copy; {new Date().getFullYear()} Hotel Management System. All rights reserved.</p>
+          </motion.footer>
         </motion.div>
       )}
+      
+      {/* Background Decoration Elements */}
+      <div className="absolute top-20 right-20 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+      <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-40 right-40 w-64 h-64 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
     </div>
   );
 };

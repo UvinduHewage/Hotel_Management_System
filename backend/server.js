@@ -4,8 +4,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const staffRoutes = require("./routes/Uvindu_routes/staffRoutes");
-const authRoutes = require("./routes/Uvindu_routes/LoginRoutes");
 const announcementRoutes = require("./routes/Uvindu_routes/announcementsRoutes");
+const adminRoutes = require('./routes/Uvindu_routes/adminRoutes');
+const authRoutes = require('./routes/Uvindu_routes/authRoutes');
 
 const app = require("./App");  
 
@@ -20,8 +21,11 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api", staffRoutes); 
-app.use("/api/auth", authRoutes); 
 app.use("/api", announcementRoutes);
+
+//Login 
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Connect to MongoDB
 mongoose
