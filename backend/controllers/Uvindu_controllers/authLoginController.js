@@ -1,5 +1,3 @@
-//controllers/Uvindu_controllers/authLoginController
-
 const User = require('../../models/Uvindu_models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');

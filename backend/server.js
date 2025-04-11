@@ -23,11 +23,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api", staffRoutes); 
 app.use("/api", announcementRoutes);
 
-//Login 
+//Login routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log(" Connected to MongoDB"))

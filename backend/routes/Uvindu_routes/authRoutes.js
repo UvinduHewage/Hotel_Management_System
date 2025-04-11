@@ -1,4 +1,3 @@
-// routes/Uvindu_routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
 const { signup, login, verifyToken } = require('../../controllers/Uvindu_controllers/authLoginController');

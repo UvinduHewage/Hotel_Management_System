@@ -1,4 +1,3 @@
-// routes/Uvindu_routes/adminRoutes.js
 const express = require('express');
 const router = express.Router();
 const { isAuth, isAdmin } = require('../../middleware/authMiddleware');
