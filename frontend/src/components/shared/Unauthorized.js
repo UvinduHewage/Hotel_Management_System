@@ -1,4 +1,4 @@
-// src/components/shared/Unauthorized.js - Unauthorized access page
+// Unauthorized access page
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldAlert } from 'lucide-react';

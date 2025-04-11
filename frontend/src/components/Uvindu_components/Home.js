@@ -1,4 +1,3 @@
-// src/components/Uvindu_components/Home.js - Updated home page component with animations (header removed)
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
@@ -170,7 +169,7 @@ const HomePage = ({ onEnterSystem }) => {
                 <Hotel className="w-20 h-20 text-indigo-600" />
               </motion.div>
               <motion.h1 variants={itemVariants} className="text-5xl font-bold text-gray-800 mb-4">
-                Hotel Management System
+                Grand Horizon Hotel & Resort
               </motion.h1>
               <motion.p variants={itemVariants} className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
                 A comprehensive solution to streamline your hotel operations and enhance guest experiences
@@ -220,7 +219,7 @@ const HomePage = ({ onEnterSystem }) => {
             transition={{ delay: 1.5 }}
             className="mt-16 pt-6 border-t border-gray-200 text-center text-gray-500"
           >
-            <p>&copy; {new Date().getFullYear()} Hotel Management System. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Grand Horizon Hotel & Resort. All rights reserved.</p>
           </motion.footer>
         </motion.div>
       )}

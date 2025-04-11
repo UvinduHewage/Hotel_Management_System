@@ -1,4 +1,4 @@
-// src/components/shared/EmptyState.js - Empty state component
+// Empty state component
 import React from 'react';
 import { FileX } from 'lucide-react';
 

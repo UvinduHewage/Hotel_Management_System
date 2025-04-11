@@ -1,4 +1,4 @@
-// src/components/shared/ConfirmDialog.js - Reusable confirmation dialog
+//Reusable confirmation dialog
 import React from 'react';
 
 const ConfirmDialog = ({ 

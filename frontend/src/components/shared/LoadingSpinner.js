@@ -1,4 +1,4 @@
-// src/components/shared/LoadingSpinner.js - Reusable loading spinner
+// Reusable loading spinner
 import React from 'react';
 
 const LoadingSpinner = ({ size = 'medium', color = 'blue' }) => {

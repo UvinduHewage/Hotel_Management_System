@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.js - Authentication context for global state management
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 

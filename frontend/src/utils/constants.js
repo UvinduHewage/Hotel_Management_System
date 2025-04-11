@@ -1,9 +1,3 @@
-// utils/constants.js
-
-/**
- * Application constants and configuration values
- */
-
 // API URLs
 export const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
 

@@ -1,4 +1,4 @@
-// src/components/shared/ErrorBoundary.js - Component to catch errors
+// Component to catch errors
 import React from 'react';
 
 class ErrorBoundary extends React.Component {

@@ -1,4 +1,4 @@
-// src/components/shared/PageHeader.js - Consistent page headers
+// Consistent page headers
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';

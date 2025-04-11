@@ -1,4 +1,4 @@
-// src/services/api.js - Base API service
+// api.js - Base API service
 import { toast } from 'react-toastify';
 
 // Base API URL

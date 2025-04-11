@@ -1,10 +1,3 @@
-// services/localStorage.js
-
-/**
- * Local storage service provides utility functions for safely working
- * with browser localStorage, including expiration and serialization.
- */
-
 // Set item with optional expiration
 export const setItem = (key, value, expirationInMinutes = null) => {
     try {

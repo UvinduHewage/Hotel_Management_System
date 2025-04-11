@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Menu, User, LogOut, LogIn } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import UserProfilePopup from "./UserProfilePopup"; // Import the popup component
+import UserProfilePopup from "./UserProfilePopup"; 
 
 const Header = ({ onSidebarToggle }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -53,7 +53,7 @@ const Header = ({ onSidebarToggle }) => {
           >
             <Menu size={24} />
           </button>
-          <div className="text-xl font-semibold">Hotel Management System</div>
+          <div className="text-xl font-semibold">Grand Horizon Hotel & Resort</div>
         </div>
         <div className="flex items-center space-x-4">
           {currentUser ? (

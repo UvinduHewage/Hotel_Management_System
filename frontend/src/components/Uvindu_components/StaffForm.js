@@ -1,5 +1,3 @@
-// src/components/Uvindu_components/StaffForm.js
-
 import React, { useState } from "react";
 
 const StaffForm = ({ onSubmit }) => {

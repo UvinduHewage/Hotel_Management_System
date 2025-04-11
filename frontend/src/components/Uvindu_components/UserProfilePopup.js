@@ -4,7 +4,6 @@ import { X, Hotel, Mail, Award, Clock } from "lucide-react";
 const UserProfilePopup = ({ user, onClose }) => {
   if (!user) return null;
   
-  // Add animation effect when component mounts
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const popup = document.getElementById('profile-popup');
@@ -72,7 +71,7 @@ const UserProfilePopup = ({ user, onClose }) => {
         <div className="mt-6 flex justify-center">
           <div className="flex items-center text-blue-500">
             <Hotel size={18} className="mr-2" />
-            <span className="font-medium">SuiteNova</span>
+            <span className="font-medium">Grand Horizon Hotel & Resort</span>
           </div>
         </div>
       </div>
