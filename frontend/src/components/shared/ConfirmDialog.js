@@ -9,7 +9,7 @@ const ConfirmDialog = ({
   message = 'Are you sure you want to proceed?',
   confirmText = 'Confirm',
   cancelText = 'Cancel',
-  type = 'warning' // warning, danger, info
+  type = 'warning' 
 }) => {
   if (!isOpen) return null;
 

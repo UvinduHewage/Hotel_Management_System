@@ -105,7 +105,7 @@ const StaffPopup = ({ selectedStaff, showPopup, handleClosePopup }) => {
                 <motion.img
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
-                  src={`http://localhost:5000/uploads/${selectedStaff.profilePic}`}
+                  src={`/uploads/${selectedStaff.profilePic}`}
                   alt="Profile"
                   className="w-20 h-20 rounded-full object-cover border-4 border-blue-200"
                 />

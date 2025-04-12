@@ -1,3 +1,5 @@
+//components/Uvindu_components/AddStaff
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, SunDim, Moon, Upload, UserPlus, ChevronDown, Building2, Hotel, CheckCircle2, AlertCircle, AlertTriangle, X } from "lucide-react"; 
@@ -135,7 +137,7 @@ const AddStaff = () => {
     }
   
     try {
-      const response = await axios.post("http://localhost:5000/api/staff", formDataToSend, {
+      const response = await axios.post("/api/staff", formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
       });
   
@@ -465,7 +467,7 @@ const AddStaff = () => {
               className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
             >
               <UserPlus className="mr-2" /> Add Staff Member
-            </motion.button>
+            </motion.button> 
           </form>
         </div>
       </motion.div>

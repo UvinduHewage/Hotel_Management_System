@@ -73,7 +73,7 @@ const StaffList = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/staff");
+        const response = await axios.get("/api/staff");
         setStaff(response.data);
       } catch (err) {
         setError("Unable to retrieve staff information");
@@ -90,7 +90,7 @@ const StaffList = () => {
     if (!staffToDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/staff/${staffToDelete._id}`);
+      await axios.delete(`/api/staff/${staffToDelete._id}`);
       setStaff(staff.filter((staffMember) => staffMember._id !== staffToDelete._id));
       setIsDeleteModalOpen(false);
       setStaffToDelete(null);
@@ -193,7 +193,7 @@ const StaffList = () => {
                     <td className="p-4">
                       {staffMember.profilePic ? (
                         <img
-                          src={`http://localhost:5000/uploads/${staffMember.profilePic}`}
+                          src={`/uploads/${staffMember.profilePic}`}
                           alt="Profile"
                           className="w-12 h-12 rounded-full object-cover border-2 border-blue-200"
                         />

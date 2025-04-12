@@ -31,11 +31,11 @@ const Dashboard = () => {
   const fetchStaffData = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("http://localhost:5000/api/staff");
+      const { data } = await axios.get("/api/staff");
       const totalStaff = data.length;
       const onDutyCount = data.filter((staff) => staff.status === "Active").length;
       const attendanceRate = totalStaff ? ((onDutyCount / totalStaff) * 100).toFixed(2) : 0;
-      const activeStaffResponse = await axios.get("http://localhost:5000/api/staff/active-count");
+      const activeStaffResponse = await axios.get("/api/staff/active-count");
 
       // Organize staff by department for department stats
       const deptMap = {};
@@ -751,7 +751,7 @@ const Dashboard = () => {
                 >
                   <td className="py-3 px-6">
                     <img
-                      src={staff.profilePic ? `http://localhost:5000/uploads/${staff.profilePic}` : "/default-avatar.jpg"}
+                      src={staff.profilePic ? `/uploads/${staff.profilePic}` : "/default-avatar.jpg"}
                       alt="Profile"
                       className="w-10 h-10 rounded-full object-cover"
                     />

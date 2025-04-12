@@ -26,9 +26,9 @@ const GuestManagementDashboard = () => {
       setIsLoading(true);
       try {
         const [bookingsRes, roomsRes, announcementsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/bookings'),
-          axios.get('http://localhost:5000/api/rooms'),
-          axios.get('http://localhost:5000/api/announcements/today'),
+          axios.get('/api/bookings'),
+          axios.get('/api/rooms'),
+          axios.get('/api/announcements/today'),
         ]);
 
         const bookingsData = bookingsRes.data;

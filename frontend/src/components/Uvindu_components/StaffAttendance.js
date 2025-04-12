@@ -47,7 +47,7 @@ const StaffAttendance = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/staff")
+    fetch("/api/staff")
       .then((res) => {
         if (!res.ok) {
           throw new Error('Failed to fetch staff data');
@@ -73,7 +73,7 @@ const StaffAttendance = () => {
 
   const submitAttendance = () => {
     setIsSubmitting(true);
-    fetch("http://localhost:5000/api/staff/attendance", {
+    fetch("/api/staff/attendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(attendance),

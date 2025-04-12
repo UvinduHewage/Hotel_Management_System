@@ -22,7 +22,7 @@ const StaffExport = () => {
     const fetchStaffData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/api/staff");
+        const response = await axios.get("/api/staff");
         
         const totalStaff = response.data.length;
         const onDuty = response.data.filter(
@@ -31,7 +31,7 @@ const StaffExport = () => {
         const attendanceRate =
           totalStaff > 0 ? ((onDuty / totalStaff) * 100).toFixed(2) : 0;
         const activeResponse = await axios.get(
-          "http://localhost:5000/api/staff/active-count"
+          "/api/staff/active-count"
         );
         const openPositions = totalStaff - onDuty;
 
@@ -262,7 +262,7 @@ const StaffExport = () => {
                       <img
                         src={
                           staffMember.profilePic
-                            ? `http://localhost:5000/uploads/${staffMember.profilePic}`
+                            ? `/uploads/${staffMember.profilePic}`
                             : "/default-avatar.jpg"
                         }
                         alt="Profile"

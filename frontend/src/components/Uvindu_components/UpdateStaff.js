@@ -2,9 +2,33 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Upload, UserPlus, Hotel, Users, Sun, SunDim, Moon } from "lucide-react";
+import { ChevronDown, Upload, UserPlus, Hotel, Users, Sun, SunDim, Moon, CheckCircle2, AlertTriangle, X } from "lucide-react";
 
-
+// Toast Component
+const Toast = ({ type, message, onClose }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 100 }}
+      className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg flex items-center space-x-3
+        ${type === 'success'
+          ? 'bg-green-500 text-white'
+          : 'bg-red-500 text-white'
+        }`}
+    >
+      {type === 'success' ? (
+        <CheckCircle2 size={24} />
+      ) : (
+        <AlertTriangle size={24} />
+      )}
+      <div className="flex-grow">{message}</div>
+      <button onClick={onClose} className="hover:bg-white/20 rounded-full p-1">
+        <X size={20} />
+      </button>
+    </motion.div>
+  );
+};
 
 const UpdateStaff = () => {
   const { id } = useParams();
@@ -25,6 +49,9 @@ const UpdateStaff = () => {
   const [isJobTitleOpen, setIsJobTitleOpen] = useState(false);
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastType, setToastType] = useState("success");
+  const [toastMessage, setToastMessage] = useState("");
   
 
 const departments = {
@@ -104,11 +131,12 @@ const departments = {
   useEffect(() => {
     const fetchStaffData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/staff/${id}`);
+        const response = await axios.get(`/api/staff/${id}`);
         setStaffData(response.data);
-        setImagePreview(`http://localhost:5000/uploads/${response.data.profilePic}`);
+        setImagePreview(`/uploads/${response.data.profilePic}`);
       } catch (err) {
         setError('Unable to fetch staff data');
+        showToastMessage('error', 'Unable to fetch staff data');        
       } finally {
         setLoading(false);
       }
@@ -116,6 +144,17 @@ const departments = {
 
     fetchStaffData();
   }, [id]);
+
+  const showToastMessage = (type, message) => {
+    setToastType(type);
+    setToastMessage(message);
+    setShowToast(true);
+    
+    // Auto-hide toast after 5 seconds
+    setTimeout(() => {
+      setShowToast(false);
+    }, 5000);
+  };
 
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
@@ -165,7 +204,7 @@ const departments = {
     }
   
     try {
-      const response = await axios.put(`http://localhost:5000/api/staff/${id}`, formData, {
+      const response = await axios.put(`/api/staff/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -174,13 +213,15 @@ const departments = {
       // Check if the response was successful
       if (response.status === 200) {
         setSuccessMessage("Staff member updated successfully!");
+        showToastMessage('success', 'Staff member updated successfully!');
         setError(""); // Clear any previous errors
         setTimeout(() => {
           navigate("/staff");
-        }, 1500);
+        }, 3000);
       }
     } catch (err) {
       setError("Error updating staff member");
+      showToastMessage('error', 'Error updating staff member');
       console.error(err);
     }
   };
@@ -188,6 +229,15 @@ const departments = {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <AnimatePresence>
+        {showToast && (
+          <Toast 
+            type={toastType} 
+            message={toastMessage} 
+            onClose={() => setShowToast(false)} 
+          />
+        )}
+      </AnimatePresence>
       <div className="container mx-auto grid md:grid-cols-2 gap-8 bg-white shadow-2xl rounded-2xl overflow-hidden">
         {/* Form Section */}
         <motion.div 
@@ -336,54 +386,58 @@ const departments = {
                 </div>
               </div>
 
-              {/* Shifts Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Shifts:</label>
-                <div className="flex space-x-6 justify-center">
-                  {["morning", "afternoon", "night"].map((shift) => (
-                    <motion.label 
-                      key={shift} 
-                      className="flex flex-col items-center cursor-pointer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+            {/* Shifts Selection */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              <label className="block text-sm font-medium text-gray-700 mb-2">Shifts:</label>
+              <div className="flex space-x-6 justify-center">
+                {["morning", "afternoon", "night"].map((shift) => (
+                  <motion.label 
+                    key={shift} 
+                    className="flex flex-col items-center cursor-pointer"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <input
+                      type="checkbox"
+                      name={shift}
+                      checked={staffData.shifts[shift]}
+                      onChange={handleChange}
+                      className="hidden peer"
+                    />
+                    <motion.div
+                      className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mb-2"
+                      animate={{
+                        backgroundColor: staffData.shifts[shift] ? "#E5E4E2" : "#FFFFFF",
+                        borderColor: staffData.shifts[shift] ? "#FFFFFF" : "#9CA3AF",
+                      }}
                     >
-                      <input
-                        type="checkbox"
-                        name={shift}
-                        checked={staffData.shifts[shift]}
-                        onChange={handleChange}
-                        className="hidden peer"
-                      />
-                      <motion.div
-                        className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mb-2"
-                        animate={{
-                          backgroundColor: staffData.shifts[shift] ? "#E5E4E2" : "#FFFFFF",
-                          borderColor: staffData.shifts[shift] ? "#FFFFFF" : "#9CA3AF",
-                        }}
-                      >
-                        {staffData.shifts[shift] && (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            {shift === "morning" ? (
-                              <Sun className="text-yellow-500 w-8 h-8" />
-                            ) : shift === "afternoon" ? (
-                              <SunDim className="text-orange-500 w-8 h-8" />
-                            ) : (
-                              <Moon className="text-indigo-500 w-8 h-8" />
-                            )}
-                          </motion.div>
-                        )}
-                      </motion.div>
-                      <span className="text-sm text-gray-700">
-                        {shift.charAt(0).toUpperCase() + shift.slice(1)}
-                      </span>
-                    </motion.label>
-                  ))}
-                  </div>
-                </div>
+                      {staffData.shifts[shift] && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {shift === "morning" ? (
+                            <Sun className="text-yellow-500 w-8 h-8" />
+                          ) : shift === "afternoon" ? (
+                            <SunDim className="text-orange-500 w-8 h-8" />
+                          ) : (
+                            <Moon className="text-indigo-500 w-8 h-8" />
+                          )}
+                        </motion.div>
+                      )}
+                    </motion.div>
+                    <span className="text-sm text-gray-700">
+                      {shift.charAt(0).toUpperCase() + shift.slice(1)}
+                    </span>
+                  </motion.label>
+                ))}
+              </div>
+            </motion.div>
 
               {/* Profile Picture Upload */}
               <div>
