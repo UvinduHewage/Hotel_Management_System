@@ -95,7 +95,7 @@ const StaffAttendance = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
+    <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50">
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (

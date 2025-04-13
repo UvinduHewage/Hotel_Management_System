@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, SunDim, Moon, Upload, UserPlus, ChevronDown, Building2, Hotel, CheckCircle2, AlertCircle, AlertTriangle, X } from "lucide-react"; 
+import { Sun, SunDim, Moon, Upload, UserPlus, ChevronDown, Building2, Hotel, CheckCircle2, AlertCircle, AlertTriangle, X, CloudSun } from "lucide-react"; 
 import axios from "axios";
 
 
@@ -187,7 +187,7 @@ const AddStaff = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50">
       <AnimatePresence>
         {toast && (
           <Toast type={toast.type} message={toast.message} onClose={closeToast} />
@@ -378,7 +378,7 @@ const AddStaff = () => {
               transition={{ delay: 0.7 }}
             >
               <label className="block text-sm font-medium text-gray-700 mb-2">Shifts:</label>
-              <div className="flex space-x-6 justify-center">
+              <div className="flex space-x-6 justify-start">
                 {["morning", "afternoon", "night"].map((shift) => (
                   <motion.label 
                     key={shift} 
@@ -394,7 +394,7 @@ const AddStaff = () => {
                       className="hidden peer"
                     />
                     <motion.div
-                      className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mb-2"
+                      className="w-12 h-12 border-2 rounded-xl flex items-center justify-center spacebe mb-2"
                       animate={{
                         backgroundColor: formData.shifts[shift] ? "#E5E4E2" : "#FFFFFF",
                         borderColor: formData.shifts[shift] ? "#FFFFFF" : "#9CA3AF",
@@ -407,11 +407,11 @@ const AddStaff = () => {
                           transition={{ duration: 0.3 }}
                         >
                           {shift === "morning" ? (
-                            <Sun className="text-yellow-500 w-8 h-8" />
+                            <Sun className="text-yellow-500 w-6 h-6" />
                           ) : shift === "afternoon" ? (
-                            <SunDim className="text-orange-500 w-8 h-8" />
+                            <CloudSun className="text-orange-500 w-6 h-6" />
                           ) : (
-                            <Moon className="text-indigo-500 w-8 h-8" />
+                            <Moon className="text-indigo-500 w-6 h-6" />
                           )}
                         </motion.div>
                       )}

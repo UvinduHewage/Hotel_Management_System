@@ -8,7 +8,8 @@ import {
   FileSpreadsheet, 
   FileText, 
   CheckCircle2, 
-  XCircle 
+  XCircle,
+  Clock
 } from 'lucide-react';
 import { pdf } from "@react-pdf/renderer";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [staffList, setStaffList] = useState([]);
   const [departmentData, setDepartmentData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
   
   // Company logo URL - update this with your actual logo path
   const companyLogo = "https://www.postermywall.com/index.php/art/template/e5520a805026e9d9a5dd660cf83185ba/hotel-logo-design-template"; 
@@ -71,6 +73,7 @@ const Dashboard = () => {
       });
 
       setStaffList(data);
+      setLastUpdated(new Date());
       setLoading(false);
     } catch (error) {
       console.error("Error fetching staff data:", error);
@@ -596,32 +599,53 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="fixed inset-0 flex justify-center items-center bg-white z-50">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ 
-            repeat: Infinity, 
-            duration: 1, 
-            ease: "linear" 
-          }}
-          className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"
-        />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+      
+  //     <div className="fixed inset-0 flex justify-center items-center bg-white z-50">
+  //       <motion.div
+  //         animate={{ rotate: 360 }}
+  //         transition={{ 
+  //           repeat: Infinity, 
+  //           duration: 1, 
+  //           ease: "linear" 
+  //         }}
+  //         className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"
+  //       />
+  //     </div>
+  //   );
+  // }
+
+  // Format the last updated date and time
+  const formattedLastUpdated = lastUpdated.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
 
   return (
     <motion.div 
       initial="hidden"
       animate="visible"
       variants={containerVariants}
+      className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50 relative"
     >
+      {/* Last Updated Display */}
+      <motion.div
+        variants={itemVariants}
+        className="absolute top-6 lg:top-8 right-6 lg:right-8 flex items-center text-gray-600"
+      >
+        <Clock className="w-4 h-4 mr-2" />
+        <span className="text-sm font-medium">Last updated: {formattedLastUpdated}</span>
+      </motion.div>
+
       {/* Action Buttons */}
       <motion.div 
         variants={itemVariants}
-        className="flex justify-end space-x-4 mb-8"
+        className="flex justify-end space-x-4 mb-8 mt-12" // Added margin-top to accommodate the Last Updated display
       >
         {[
           { 
@@ -664,7 +688,7 @@ const Dashboard = () => {
       {/* Key Statistics */}
       <motion.div 
         variants={containerVariants}
-        className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8"
+        className="grid grid-cols-1 md:grid-cols-5 gap-4 lg:gap-9 mb-8"
       >
         {[
           { 
