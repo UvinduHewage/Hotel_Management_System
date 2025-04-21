@@ -124,7 +124,7 @@ const AvailableRooms = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50 relative">
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (
@@ -136,7 +136,7 @@ const AvailableRooms = () => {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10">
+      <div>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

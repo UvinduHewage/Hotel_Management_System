@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Bed, Wallet, Megaphone, CalendarCheck, PlusCircle, Activity, Clock, AlertCircle, ChevronRight, BarChart2, UserCheck } from 'lucide-react';
+import { Users, Bed, Wallet, Megaphone, CalendarCheck, PlusCircle, Activity, Clock, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+// Fixed imports - importing default exports correctly
+import BookingReport from './pdfReportGuest';
+import generateExcelReport from './excelReportGuest';
 
 const GuestManagementDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -157,22 +161,14 @@ const GuestManagementDashboard = () => {
     },
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="fixed inset-0 flex justify-center items-center bg-white bg-opacity-80 z-50">
-  //       <motion.div
-  //         animate={{ rotate: 360 }}
-  //         transition={{ 
-  //           repeat: Infinity, 
-  //           duration: 1, 
-  //           ease: "linear" 
-  //         }}
-  //         className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"
-  //       />
-  //     </div>
-  //   );
-  // }
+  const today = new Date().toISOString().split('T')[0];
 
+  const hotelInfo = {
+    hotelName: "Grand Plaza Hotel",
+    hotelAddress: "123 Luxury Lane, City Center",
+    hotelContact: "+123 456 7890",
+    hotelEmail: "info@grandplaza.com"
+  };
   return (
     <motion.div
       initial="hidden"
@@ -181,15 +177,53 @@ const GuestManagementDashboard = () => {
       className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50"
     >
       <motion.div variants={itemVariants} className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-800">
-          Guest Management Dashboard
-        </h1>
         <div className="text-sm text-gray-500">
           <Clock className="inline mr-2" size={16} />
           Last updated: {new Date().toLocaleTimeString()}
         </div>
+        
+        {/* Download Buttons */}
+        <div className="flex gap-4 my-6">
+          <PDFDownloadLink
+            document={
+              <BookingReport
+                bookings={bookings}
+                stats={stats}
+                startDate={today}
+                endDate={today}
+                title="Hotel Booking Report"
+                {...hotelInfo}
+              />
+            }
+            fileName="Hotel_Booking_Report.pdf"
+          >
+            {({ loading }) => (
+              <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center">
+                {loading ? 'Preparing PDF...' : (
+                  <>
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
+                    </svg>
+                    Download PDF Report
+                  </>
+                )}
+              </button>
+            )}
+          </PDFDownloadLink>
+  
+          <button
+            onClick={() => generateExcelReport(bookings)}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center"
+          >
+            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm-3-4a1 1 0 011-1h6a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
+            </svg>
+            Download Excel Report
+          </button>
+        </div>
       </motion.div>
 
+      {/* Rest of the component remains unchanged */}
       {/* Dashboard Stats */}
       <motion.div
         variants={containerVariants}
@@ -289,7 +323,6 @@ const GuestManagementDashboard = () => {
 
         {/* Recent Check-ins */}
         <motion.div>
-          
           <div className="space-y-3">
             {recentCheckIns.length > 0 ? (
               recentCheckIns.map((checkin, index) => (

@@ -38,23 +38,11 @@ const Sidebar = ({ isVisible, userRole }) => {
       label: "Dashboard",
       access: ["admin"] // Both user and admin can access
     },
-    { 
-      to: "/roomsUI", 
-      icon: <ScanSearch size={20} className="flex-shrink-0" />, 
-      label: "Browse Rooms",
-      access: ["user", "admin"] // Both user and admin can access
-    },
     // Admin only routes
     { 
       to: "/guest-management", 
       icon: <Users size={20} className="flex-shrink-0" />, 
       label: "Guest Dashboard",
-      access: ["admin"]
-    },
-    { 
-      to: "/staff", 
-      icon: <NotebookTabs size={20} className="flex-shrink-0" />, 
-      label: "Staff Management",
       access: ["admin"]
     },
     { 
@@ -68,6 +56,18 @@ const Sidebar = ({ isVisible, userRole }) => {
       icon: <CheckSquare size={20} className="flex-shrink-0" />, 
       label: "Attendance",
       access: ["admin"]
+    },
+    { 
+      to: "/staff", 
+      icon: <NotebookTabs size={20} className="flex-shrink-0" />, 
+      label: "Staff Management",
+      access: ["admin"]
+    },
+    { 
+      to: "/roomsUI", 
+      icon: <ScanSearch size={20} className="flex-shrink-0" />, 
+      label: "Browse Rooms",
+      access: ["user", "admin"] // Both user and admin can access
     },
     { 
       to: "/bookingHome", 

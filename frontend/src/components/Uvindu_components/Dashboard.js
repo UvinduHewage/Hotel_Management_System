@@ -636,7 +636,7 @@ const Dashboard = () => {
       {/* Last Updated Display */}
       <motion.div
         variants={itemVariants}
-        className="absolute top-6 lg:top-8 right-6 lg:right-8 flex items-center text-gray-600"
+        className="absolute top-9 lg:top-9 right-6 lg:right-8 flex items-center text-gray-600"
       >
         <Clock className="w-4 h-4 mr-2" />
         <span className="text-sm font-medium">Last updated: {formattedLastUpdated}</span>
@@ -645,7 +645,7 @@ const Dashboard = () => {
       {/* Action Buttons */}
       <motion.div 
         variants={itemVariants}
-        className="flex justify-end space-x-4 mb-8 mt-12" // Added margin-top to accommodate the Last Updated display
+        className="flex justify-start space-x-4 mb-8 mt-12" // Added margin-top to accommodate the Last Updated display
       >
         {[
           { 
