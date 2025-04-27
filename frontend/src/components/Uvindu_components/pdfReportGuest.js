@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     textAlign: 'center',
-    fontSize: 8,
-    color: '#9CA3AF',
+    fontSize: 8,  
+    color: '#9CA3AF',           
   },
   summaryBox: {
     backgroundColor: '#EFF6FF',
