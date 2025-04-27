@@ -6,13 +6,17 @@ import BookedRoomsFilter from "../../components/Bawantha_components/BookedRoomsF
 import BookedRoomsTable from "../../components/Bawantha_components/BookedRoomsTable";
 import RoomGrid from "../../components/Bawantha_components/RoomGrid";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 const BookedRooms = () => {
   const [bookedRooms, setBookedRooms] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
   const [filteredTableBookings, setFilteredTableBookings] = useState([]);
+  const [selectedBookedDates, setSelectedBookedDates] = useState([]); // 🆕
+
+  const location = useLocation();
+  const incomingRoomNumber = location.state?.roomNumber || null;
 
   const fetchBookedRooms = () => {
     setIsLoading(true);
@@ -33,6 +37,27 @@ const BookedRooms = () => {
   useEffect(() => {
     fetchBookedRooms();
   }, []);
+
+  useEffect(() => {
+    if (incomingRoomNumber && originalData.length > 0) {
+      const filtered = originalData.filter((r) => r.roomNumber === incomingRoomNumber);
+      if (filtered.length > 0) {
+        setFilteredTableBookings(filtered);
+        window.history.replaceState({}, document.title); // optional cleanup
+      }
+    }
+  }, [incomingRoomNumber, originalData]);
+
+  // 🆕 Helper function to get dates between check-in and check-out
+  const getDatesBetween = (start, end) => {
+    const dates = [];
+    const current = new Date(start);
+    while (current <= end) {
+      dates.push(current.toISOString().split('T')[0]);
+      current.setDate(current.getDate() + 1);
+    }
+    return dates;
+  };
 
   const handleFilter = ({ roomNumber, checkInDate, checkOutDate }) => {
     let filtered = [...originalData];
@@ -56,18 +81,26 @@ const BookedRooms = () => {
 
     setBookedRooms(filtered);
   };
+
   const handleRoomClick = (roomNumber) => {
     const filtered = originalData.filter((room) => room.roomNumber === roomNumber);
-    
+
     if (filtered.length > 0) {
-      setFilteredTableBookings(filtered); // ✅ Only update the table
+      setFilteredTableBookings(filtered); // ✅ Update table
+
+      const booking = filtered[0];
+      if (booking.checkInDate && booking.checkOutDate) {
+        const dates = getDatesBetween(
+          new Date(booking.checkInDate),
+          new Date(booking.checkOutDate)
+        );
+        setSelectedBookedDates(dates); // ✅ Highlight booking dates on Calendar
+      }
     } else {
       console.warn("No booking found for room:", roomNumber);
     }
   };
-  
-  
-  
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -94,7 +127,7 @@ const BookedRooms = () => {
 
   return (
     <div>
-      {/* Header with subtle gradient */}
+      {/* Header */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 py-6 px-8 shadow-sm mb-6">
         <h1 className="text-2xl font-bold text-gray-800">
           Hotel Management System
@@ -108,7 +141,7 @@ const BookedRooms = () => {
         animate="visible"
         variants={containerVariants}
       >
-        {/* Filter Section with subtle animations */}
+        {/* Filter Section */}
         <motion.div
           className="bg-white p-5 shadow-lg rounded-lg mb-6 border-l-4 border-blue-500"
           variants={itemVariants}
@@ -138,22 +171,22 @@ const BookedRooms = () => {
                 Refresh
               </motion.button>
             </div>
-            
+
             {isLoading ? (
               <div className="flex justify-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
               </div>
             ) : (
-              <BookedRoomsTable bookedRooms={filteredTableBookings} refreshBookings={fetchBookedRooms} />
+              <BookedRoomsTable
+                bookedRooms={filteredTableBookings}
+                refreshBookings={fetchBookedRooms}
+              />
             )}
           </motion.div>
 
           {/* Sidebar Section */}
-          <motion.div
-            className="lg:w-1/4 space-y-6"
-            variants={itemVariants}
-          >
-            {/* Room Grid Card */}
+          <motion.div className="lg:w-1/4 space-y-6" variants={itemVariants}>
+            {/* Room Grid */}
             <div className="bg-white p-5 shadow-lg rounded-lg border-t-4 border-indigo-500">
               <h3 className="text-lg font-semibold mb-4 text-gray-700">
                 Room Overview
@@ -164,7 +197,7 @@ const BookedRooms = () => {
                 bookings={bookedRooms}
                 onRoomClick={handleRoomClick}
               />
-              
+
               {/* Room status legend */}
               <div className="mt-4 flex flex-wrap gap-3">
                 <div className="flex items-center">
@@ -182,16 +215,19 @@ const BookedRooms = () => {
               </div>
             </div>
 
-            {/* Calendar Card */}
+            {/* Calendar */}
             <div className="bg-white p-5 shadow-lg rounded-lg border-t-4 border-purple-500">
               <h3 className="text-lg font-semibold mb-4 text-gray-700">
                 Availability Calendar
               </h3>
-              <Calendar onDateSelect={(date) => console.log("Selected date:", date)} />
+              <Calendar 
+                selectedDates={selectedBookedDates}
+                onDateSelect={(date) => console.log("Selected date:", date)} 
+              />
             </div>
 
-            {/* Quick Stats Card */}
-            <motion.div 
+            {/* Quick Stats */}
+            <motion.div
               className="bg-white p-5 shadow-lg rounded-lg border-t-4 border-teal-500"
               whileHover={{ y: -5 }}
               transition={{ type: "spring", stiffness: 300 }}
@@ -211,8 +247,8 @@ const BookedRooms = () => {
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div 
-                    className="bg-blue-600 h-2.5 rounded-full transition-all duration-1000" 
+                  <div
+                    className="bg-blue-600 h-2.5 rounded-full transition-all duration-1000"
                     style={{ width: `${bookedRooms.length ? Math.round((bookedRooms.length / 30) * 100) : 0}%` }}
                   ></div>
                 </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
+
 import Calendar from "../../components/Bawantha_components/Calendar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Hotel, X, Loader, BedDouble, AlertTriangle, CheckCircle2 } from "lucide-react";
@@ -34,6 +35,17 @@ const Toast = ({ type, message, onClose }) => {
   );
 };
 
+// 🆕 Helper function to get dates between check-in and check-out
+const getDatesBetween = (start, end) => {
+  const dates = [];
+  const current = new Date(start);
+  while (current <= end) {
+    dates.push(current.toISOString().split('T')[0]);
+    current.setDate(current.getDate() + 1);
+  }
+  return dates;
+};
+
 const AvailableRooms = () => {
   const [rooms, setRooms] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
@@ -41,10 +53,10 @@ const AvailableRooms = () => {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState(null);
-  const [filteredTableRooms, setFilteredTableRooms] = useState([]);
+  const [selectedRoomNumber, setSelectedRoomNumber] = useState(null);
+  const [selectedBookedDates, setSelectedBookedDates] = useState([]); // 🆕
 
 
-  const navigate = useNavigate();
 
   const showToast = (type, message) => {
     setToast({ type, message });
@@ -52,8 +64,7 @@ const AvailableRooms = () => {
       setToast(null);
     }, 3000);
   };
-  
-  
+
   const closeToast = () => {
     setToast(null);
   };
@@ -64,11 +75,10 @@ const AvailableRooms = () => {
       try {
         const roomsResponse = await axios.get("http://localhost:5000/api/rooms");
         const bookingsResponse = await axios.get("http://localhost:5000/api/bookings");
-        
+
         setRooms(roomsResponse.data.data);
-        setFilteredRooms(roomsResponse.data.data); // ✅ move inside here
-        setFilteredTableRooms(roomsResponse.data.data); // ✅ move inside here
-    
+        setFilteredRooms(roomsResponse.data.data);
+
         const booked = bookingsResponse.data.data;
         const bookedNumbers = booked.map((b) => b.roomNumber);
         setBookings(booked);
@@ -81,7 +91,6 @@ const AvailableRooms = () => {
         setIsLoading(false);
       }
     };
-    
 
     fetchData();
   }, []);
@@ -102,6 +111,8 @@ const AvailableRooms = () => {
     }
 
     setFilteredRooms(filtered);
+    setSelectedRoomNumber(null);
+    setSelectedBookedDates([]); // 🆕 Clear calendar highlights when filtering
   };
 
   const visibleRooms = filteredRooms.filter(
@@ -110,21 +121,30 @@ const AvailableRooms = () => {
 
   const handleRoomClick = (roomNumber) => {
     const isAvailable = visibleRooms.some((r) => r.roomNumber === roomNumber);
-  
+
     if (isAvailable) {
-      const filtered = visibleRooms.filter((room) => room.roomNumber === roomNumber);
-      setFilteredTableRooms(filtered); // ✅ Only update table
+      setSelectedRoomNumber(roomNumber);
+      setSelectedBookedDates([]); // No highlight for available rooms
     } else {
       const booking = bookings.find((b) => b.roomNumber === roomNumber);
       if (booking) {
-        navigate(`/bookings/${booking._id}`);
+        setSelectedRoomNumber(null); // No table filtering for booked rooms
+        if (booking.checkInDate && booking.checkOutDate) {
+          const dates = getDatesBetween(
+            new Date(booking.checkInDate),
+            new Date(booking.checkOutDate)
+          );
+          setSelectedBookedDates(dates);
+        }
       } else {
         console.log("No booking for this room yet.");
       }
     }
   };
-  
-  
+
+  const displayedRooms = selectedRoomNumber
+    ? visibleRooms.filter((room) => room.roomNumber === selectedRoomNumber)
+    : visibleRooms;
 
   if (isLoading) {
     return (
@@ -189,16 +209,16 @@ const AvailableRooms = () => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800">Available Rooms</h2>
               <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                {visibleRooms.length} Rooms
+                {displayedRooms.length} Rooms
               </span>
             </div>
-            
+
             <div className="overflow-x-auto">
-            <AvailableRoomsTable rooms={filteredTableRooms} />
+              <AvailableRoomsTable rooms={displayedRooms} />
             </div>
           </motion.div>
 
-          {/* RIGHT: Room Status and Calendar in a column */}
+          {/* RIGHT: Room Status and Calendar */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -211,14 +231,14 @@ const AvailableRooms = () => {
                 <BedDouble size={24} className="text-blue-600 mr-2" />
                 <h3 className="text-lg font-semibold text-gray-800">Room Status</h3>
               </div>
-              
+
               <RoomGrid
                 rooms={rooms}
                 visibleRooms={visibleRooms}
                 mode="available"
                 onRoomClick={handleRoomClick}
               />
-              
+
               <div className="flex justify-between text-sm mt-4 text-gray-600">
                 <div className="flex items-center">
                   <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
@@ -231,14 +251,16 @@ const AvailableRooms = () => {
               </div>
             </div>
 
-            {/* Calendar Card - Directly below Room Status */}
+            {/* Calendar Card */}
             <div className="bg-white p-5 shadow-sm rounded-lg border border-gray-200">
               <h3 className="text-lg font-semibold mb-4 text-gray-800">Availability Calendar</h3>
-              <Calendar onDateSelect={(date) => console.log("Selected date:", date)} />
+              <Calendar
+                selectedDates={selectedBookedDates}
+                onDateSelect={(date) => console.log("Selected date:", date)}
+              />
             </div>
           </motion.div>
         </div>
-      
       </div>
     </div>
   );
