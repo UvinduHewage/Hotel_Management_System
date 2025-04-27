@@ -41,6 +41,8 @@ const AvailableRooms = () => {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const [filteredTableRooms, setFilteredTableRooms] = useState([]);
+
 
   const navigate = useNavigate();
 
@@ -50,7 +52,8 @@ const AvailableRooms = () => {
       setToast(null);
     }, 3000);
   };
-
+  
+  
   const closeToast = () => {
     setToast(null);
   };
@@ -63,8 +66,9 @@ const AvailableRooms = () => {
         const bookingsResponse = await axios.get("http://localhost:5000/api/bookings");
         
         setRooms(roomsResponse.data.data);
-        setFilteredRooms(roomsResponse.data.data);
-        
+        setFilteredRooms(roomsResponse.data.data); // ✅ move inside here
+        setFilteredTableRooms(roomsResponse.data.data); // ✅ move inside here
+    
         const booked = bookingsResponse.data.data;
         const bookedNumbers = booked.map((b) => b.roomNumber);
         setBookings(booked);
@@ -77,6 +81,7 @@ const AvailableRooms = () => {
         setIsLoading(false);
       }
     };
+    
 
     fetchData();
   }, []);
@@ -104,13 +109,22 @@ const AvailableRooms = () => {
   );
 
   const handleRoomClick = (roomNumber) => {
-    const booking = bookings.find((b) => b.roomNumber === roomNumber);
-    if (booking) {
-      navigate(`/bookings/${booking._id}`);
+    const isAvailable = visibleRooms.some((r) => r.roomNumber === roomNumber);
+  
+    if (isAvailable) {
+      const filtered = visibleRooms.filter((room) => room.roomNumber === roomNumber);
+      setFilteredTableRooms(filtered); // ✅ Only update table
     } else {
-      console.log("No booking for this room yet.");
+      const booking = bookings.find((b) => b.roomNumber === roomNumber);
+      if (booking) {
+        navigate(`/bookings/${booking._id}`);
+      } else {
+        console.log("No booking for this room yet.");
+      }
     }
   };
+  
+  
 
   if (isLoading) {
     return (
@@ -180,7 +194,7 @@ const AvailableRooms = () => {
             </div>
             
             <div className="overflow-x-auto">
-              <AvailableRoomsTable rooms={visibleRooms} />
+            <AvailableRoomsTable rooms={filteredTableRooms} />
             </div>
           </motion.div>
 

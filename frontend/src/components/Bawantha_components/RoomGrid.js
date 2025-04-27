@@ -7,38 +7,46 @@ const RoomGrid = ({ rooms, visibleRooms = [], onRoomClick, mode = "available" })
   const getRoomStatus = (roomNumber) => {
     const paddedNumber = roomNumber < 10 ? `R0${roomNumber}` : `R${roomNumber}`;
     
-    const isAvailable = visibleRooms.some((r) => r.roomNumber === paddedNumber);
-
+    const room = rooms.find((r) => r.roomNumber === paddedNumber); // Find full room data if any
+    const isAvailable = visibleRooms.some((r) => r.roomNumber === paddedNumber); // Check in visibleRooms
+  
+    const today = new Date().toISOString().split('T')[0];
+    const isCheckingOutToday = room && room.checkOutDate && room.checkOutDate.split('T')[0] === today;
+  
     if (mode === "available") {
-      return isAvailable ? "bg-green-500 text-white" : "bg-red-500 text-white";
+      if (isAvailable) {
+        return "bg-green-500 text-white"; // Available = Green
+      } else if (isCheckingOutToday) {
+        return "bg-yellow-400 text-white"; // Checking out = Yellow
+      } else {
+        return "bg-red-500 text-white"; // Booked = Red
+      }
     } else {
-      const room = rooms.find((r) => r.roomNumber === paddedNumber);
-      const today = new Date().toISOString().split('T')[0];
-      const isCheckingOutToday = room && room.checkOutDate && room.checkOutDate.split('T')[0] === today;
-      const isBooked = !!room;
-
       if (isCheckingOutToday) return "bg-yellow-400 text-white";
+      const isBooked = !!room;
       return isBooked ? "bg-red-500 text-white" : "bg-green-400 text-white";
     }
   };
+  
 
   const getTooltipText = (roomNumber) => {
     const paddedNumber = roomNumber < 10 ? `R0${roomNumber}` : `R${roomNumber}`;
-    
+  
+    const room = rooms.find((r) => r.roomNumber === paddedNumber);
+    const today = new Date().toISOString().split('T')[0];
+    const isCheckingOutToday = room && room.checkOutDate && room.checkOutDate.split('T')[0] === today;
     const isAvailable = visibleRooms.some((r) => r.roomNumber === paddedNumber);
-
+  
     if (mode === "available") {
+      if (isCheckingOutToday) return "Checking Out Today";
       return isAvailable ? "Available" : "Booked";
     } else {
-      const room = rooms.find((r) => r.roomNumber === paddedNumber);
-      const today = new Date().toISOString().split('T')[0];
-      const isCheckingOutToday = room && room.checkOutDate && room.checkOutDate.split('T')[0] === today;
-  
       if (!room) return "Available";
       if (isCheckingOutToday) return "Checking Out Today";
       return "Occupied";
     }
   };
+  
 
   return (
     <div className="p-2 bg-white rounded-2xl shadow-lg border border-gray-200">

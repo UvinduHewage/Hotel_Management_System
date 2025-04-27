@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
 import Calendar from "../../components/Bawantha_components/Calendar";
 import BookedRoomsFilter from "../../components/Bawantha_components/BookedRoomsFilter";
 import BookedRoomsTable from "../../components/Bawantha_components/BookedRoomsTable";
@@ -11,7 +11,8 @@ const BookedRooms = () => {
   const [bookedRooms, setBookedRooms] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
+  
+  const [filteredTableBookings, setFilteredTableBookings] = useState([]);
 
   const fetchBookedRooms = () => {
     setIsLoading(true);
@@ -20,6 +21,7 @@ const BookedRooms = () => {
       .then((response) => {
         setBookedRooms(response.data.data);
         setOriginalData(response.data.data);
+        setFilteredTableBookings(response.data.data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -54,16 +56,18 @@ const BookedRooms = () => {
 
     setBookedRooms(filtered);
   };
-
   const handleRoomClick = (roomNumber) => {
-    const booking = bookedRooms.find((r) => r.roomNumber === roomNumber);
-    if (booking) {
-      navigate(`/bookings/${booking._id}`);
+    const filtered = originalData.filter((room) => room.roomNumber === roomNumber);
+    
+    if (filtered.length > 0) {
+      setFilteredTableBookings(filtered); // ✅ Only update the table
     } else {
       console.warn("No booking found for room:", roomNumber);
     }
   };
-
+  
+  
+  
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -140,10 +144,7 @@ const BookedRooms = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
               </div>
             ) : (
-              <BookedRoomsTable
-                bookedRooms={bookedRooms}
-                refreshBookings={fetchBookedRooms}
-              />
+              <BookedRoomsTable bookedRooms={filteredTableBookings} refreshBookings={fetchBookedRooms} />
             )}
           </motion.div>
 
