@@ -200,6 +200,7 @@ const AvailableRooms = () => {
               
               <RoomGrid
                 rooms={rooms}
+                visibleRooms={visibleRooms}
                 mode="available"
                 onRoomClick={handleRoomClick}
               />
