@@ -3,8 +3,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaUser, FaIdCard, FaEnvelope, FaPhone, FaCalendarCheck, FaCalendarTimes, FaVenusMars } from "react-icons/fa";
-import Header from "../../components/Bawantha_components/Header";
-import Sidebar from "../../components/Bawantha_components/Sidebar";
 
 const ViewBookingPage = () => {
   const { id } = useParams();
@@ -43,7 +41,6 @@ const ViewBookingPage = () => {
 
   return (
     <>
-      <Header />
       <div
         className="flex min-h-screen bg-cover bg-center bg-no-repeat relative "
         style={{
@@ -53,7 +50,6 @@ const ViewBookingPage = () => {
         {/*Blur Overlay */}
         <div className="absolute inset-0 backdrop-blur-md bg-black bg-opacity-10"></div>
 
-        <Sidebar />
         <div className="flex-1 p-14 relative z-10 flex justify-center">
           {loading ? (
             <p className="p-6 text-white text-xl font-semibold">Loading booking details...</p>

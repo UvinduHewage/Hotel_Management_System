@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Header from "../../components/Bawantha_components/Header";
-import Sidebar from "../../components/Bawantha_components/Sidebar";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -118,7 +116,6 @@ const BookingPage = () => {
   return (
     <>
       <ToastContainer />
-      <Header />
       <div
         className="flex min-h-screen bg-cover bg-center bg-no-repeat relative"
         style={{
@@ -126,7 +123,6 @@ const BookingPage = () => {
         }}
       >
         <div className="absolute inset-0 backdrop-blur-md bg-black bg-opacity-10"></div>
-        <Sidebar />
         <div className="flex-1 p-6 relative z-10">
           {loading ? (
             <p>Loading room details...</p>
