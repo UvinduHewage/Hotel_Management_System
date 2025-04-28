@@ -31,6 +31,7 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/booking-history", bookingHistoryRoutes);
 
+
 // Root route
 app.get("/", (req, res) => {
   res.send("Hotel Management API is running");
