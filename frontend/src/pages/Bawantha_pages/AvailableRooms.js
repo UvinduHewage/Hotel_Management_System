@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-
-
 import Calendar from "../../components/Bawantha_components/Calendar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Hotel, X, Loader, BedDouble, AlertTriangle, CheckCircle2 } from "lucide-react";
@@ -22,11 +20,7 @@ const Toast = ({ type, message, onClose }) => {
         ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
       `}
     >
-      {type === 'success' ? (
-        <CheckCircle2 size={24} />
-      ) : (
-        <AlertTriangle size={24} />
-      )}
+      {type === 'success' ? <CheckCircle2 size={24} /> : <AlertTriangle size={24} />}
       <div className="flex-grow">{message}</div>
       <button onClick={onClose} className="hover:bg-white/20 rounded-full p-1">
         <X size={20} />
@@ -35,7 +29,7 @@ const Toast = ({ type, message, onClose }) => {
   );
 };
 
-// 🆕 Helper function to get dates between check-in and check-out
+// Helper function
 const getDatesBetween = (start, end) => {
   const dates = [];
   const current = new Date(start);
@@ -54,9 +48,8 @@ const AvailableRooms = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [selectedRoomNumber, setSelectedRoomNumber] = useState(null);
-  const [selectedBookedDates, setSelectedBookedDates] = useState([]); // 🆕
-
-
+  const [selectedBookedDates, setSelectedBookedDates] = useState([]);
+  const [filtersKey, setFiltersKey] = useState(0);
 
   const showToast = (type, message) => {
     setToast({ type, message });
@@ -69,31 +62,34 @@ const AvailableRooms = () => {
     setToast(null);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const roomsResponse = await axios.get("http://localhost:5000/api/rooms");
-        const bookingsResponse = await axios.get("http://localhost:5000/api/bookings");
+  // 🆕 fetchData wrapped with useCallback
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const roomsResponse = await axios.get("http://localhost:5000/api/rooms");
+      const bookingsResponse = await axios.get("http://localhost:5000/api/bookings");
 
-        setRooms(roomsResponse.data.data);
-        setFilteredRooms(roomsResponse.data.data);
+      setRooms(roomsResponse.data.data);
+      setFilteredRooms(roomsResponse.data.data);
 
-        const booked = bookingsResponse.data.data;
-        const bookedNumbers = booked.map((b) => b.roomNumber);
-        setBookings(booked);
-        setBookedRoomNumbers(bookedNumbers);
-        showToast('success', 'Room data loaded successfully');
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        showToast('error', 'Failed to load room data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      const booked = bookingsResponse.data.data;
+      const bookedNumbers = booked.map((b) => b.roomNumber);
+      setBookings(booked);
+      setBookedRoomNumbers(bookedNumbers);
 
-    fetchData();
+      setFiltersKey(prev => prev + 1);
+      showToast('success', 'Room data loaded successfully');
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      showToast('error', 'Failed to load room data');
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const filterRooms = ({ searchTerm, selectedDate, acFilter, bedType }) => {
     let filtered = [...rooms];
@@ -112,7 +108,7 @@ const AvailableRooms = () => {
 
     setFilteredRooms(filtered);
     setSelectedRoomNumber(null);
-    setSelectedBookedDates([]); // 🆕 Clear calendar highlights when filtering
+    setSelectedBookedDates([]);
   };
 
   const visibleRooms = filteredRooms.filter(
@@ -124,11 +120,11 @@ const AvailableRooms = () => {
 
     if (isAvailable) {
       setSelectedRoomNumber(roomNumber);
-      setSelectedBookedDates([]); // No highlight for available rooms
+      setSelectedBookedDates([]);
     } else {
       const booking = bookings.find((b) => b.roomNumber === roomNumber);
       if (booking) {
-        setSelectedRoomNumber(null); // No table filtering for booked rooms
+        setSelectedRoomNumber(null);
         if (booking.checkInDate && booking.checkOutDate) {
           const dates = getDatesBetween(
             new Date(booking.checkInDate),
@@ -159,14 +155,10 @@ const AvailableRooms = () => {
 
   return (
     <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50 relative">
-      {/* Toast Notification */}
+      {/* Toast */}
       <AnimatePresence>
         {toast && (
-          <Toast 
-            type={toast.type} 
-            message={toast.message} 
-            onClose={closeToast} 
-          />
+          <Toast type={toast.type} message={toast.message} onClose={closeToast} />
         )}
       </AnimatePresence>
 
@@ -187,17 +179,17 @@ const AvailableRooms = () => {
           </div>
         </motion.div>
 
-        {/* Filters Card */}
+        {/* Filters */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="bg-white p-5 shadow-sm rounded-lg border border-gray-200 mb-6"
         >
-          <Filters onFilter={filterRooms} />
+          <Filters key={filtersKey} onFilter={filterRooms} />
         </motion.div>
 
-        {/* Main Content Layout */}
+        {/* Main Layout */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* LEFT: Available Rooms Table */}
           <motion.div
@@ -208,9 +200,20 @@ const AvailableRooms = () => {
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800">Available Rooms</h2>
-              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                {displayedRooms.length} Rooms
-              </span>
+              <div className="flex items-center gap-3">
+                {/* Refresh Button */}
+                <motion.button
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={fetchData}
+                >
+                  Refresh
+                </motion.button>
+                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                  {displayedRooms.length} Rooms
+                </span>
+              </div>
             </div>
 
             <div className="overflow-x-auto">
@@ -218,14 +221,14 @@ const AvailableRooms = () => {
             </div>
           </motion.div>
 
-          {/* RIGHT: Room Status and Calendar */}
+          {/* RIGHT: RoomGrid and Calendar */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:w-1/4 flex flex-col gap-6"
           >
-            {/* Room Status Card */}
+            {/* Room Status */}
             <div className="bg-white p-5 shadow-sm rounded-lg border border-gray-200">
               <div className="flex items-center mb-4">
                 <BedDouble size={24} className="text-blue-600 mr-2" />
@@ -251,7 +254,7 @@ const AvailableRooms = () => {
               </div>
             </div>
 
-            {/* Calendar Card */}
+            {/* Calendar */}
             <div className="bg-white p-5 shadow-sm rounded-lg border border-gray-200">
               <h3 className="text-lg font-semibold mb-4 text-gray-800">Availability Calendar</h3>
               <Calendar
