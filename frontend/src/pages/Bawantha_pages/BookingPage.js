@@ -145,7 +145,7 @@ const BookingPage = () => {
               </div>
 
               <div className="bg-white/40 p-6 shadow-lg rounded-lg w-3/4 backdrop-blur-md mx-auto flex flex-col items-center">
-                <h2 className="text-2xl font-semibold mb-14 text-center">Add Customer Details</h2>
+                <h2 className="text-2xl font-semibold mb-14 text-center ">Add Customer Details</h2>
                 <form onSubmit={handleBookNow} className="grid grid-cols-2 gap-x-24 gap-y-9">
                   {[
                     { name: "firstName", label: "First Name" },
