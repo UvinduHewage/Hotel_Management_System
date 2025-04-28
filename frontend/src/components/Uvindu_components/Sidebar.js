@@ -98,6 +98,18 @@ const Sidebar = ({ isVisible, userRole }) => {
       icon: <FileClock size={20} className="flex-shrink-0" />, 
       label: "Reservation History",
       access: ["admin"]
+    },
+    { 
+      to: "/payment", 
+      icon: <FileClock size={20} className="flex-shrink-0" />, 
+      label: "Payment",
+      access: ["admin"]
+    },
+    { 
+      to: "/bills/67fb155cb9bd956c0bf5bbea", 
+      icon: <FileClock size={20} className="flex-shrink-0" />, 
+      label: "bills",
+      access: ["admin"]
     }
   ];
 
