@@ -105,12 +105,7 @@ const Sidebar = ({ isVisible, userRole }) => {
       label: "Payment",
       access: ["admin"]
     },
-    { 
-      to: "/bills/67fb155cb9bd956c0bf5bbea", 
-      icon: <FileClock size={20} className="flex-shrink-0" />, 
-      label: "bills",
-      access: ["admin"]
-    }
+  
   ];
 
   // Filter menu items based on user role
