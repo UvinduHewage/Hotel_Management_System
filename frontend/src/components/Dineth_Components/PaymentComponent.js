@@ -38,7 +38,7 @@ const PaymentComponent = () => {
 
     try {
       const { data } = await axios.post('http://localhost:5000/api/payment/create-payment-intent', {
-        amount: amount * 100,
+        amount: amount,
         currency,
         metadata: { nic_number: nic },
       });
@@ -100,8 +100,9 @@ const PaymentComponent = () => {
         <input
           type="number"
           value={amount}
-          readOnly
-          className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
+          
+          onChange={(e) => setAmount(e.target.value)}
+          className="w-full p-2 border rounded"
         />
       </div>
 

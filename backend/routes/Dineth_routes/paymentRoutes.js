@@ -1,12 +1,9 @@
-const express = require("express");
-const { createPaymentIntent, stripeWebhook } = require("../../controllers/Dineth_controllers/paymentController");
+const express = require('express');
+const { createPaymentIntent } = require('../../controllers/Dineth_controllers/paymentController');
 
 const router = express.Router();
 
-// Create Payment Intent Route
-router.post("/create-payment-intent", createPaymentIntent);
-
-// Webhook Route (Important: Use express.raw() middleware in server.js for this)
-router.post("/webhook", express.raw({ type: "application/json" }), stripeWebhook);
+// Route to create a PaymentIntent
+router.post('/create-payment-intent', createPaymentIntent);
 
 module.exports = router;
