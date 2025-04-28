@@ -1,5 +1,6 @@
-const Stripe = require("stripe");
-const dotenv = require("dotenv");
+const Stripe = require('stripe');
+const dotenv = require('dotenv');
+const Payment = require('../../models/Dineth_models/payment');
 
 dotenv.config();
 
@@ -8,15 +9,10 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 // Create Payment Intent
 exports.createPaymentIntent = async (req, res) => {
   try {
-    const {
-      amount,
-      currency,
-      billing_details = {},
-      metadata = {},
-    } = req.body;
+    const { amount, currency, metadata = {} } = req.body;
 
     if (!amount || !currency) {
-      return res.status(400).json({ error: "Amount and currency are required" });
+      return res.status(400).json({ error: "Amount and currency are required." });
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -26,47 +22,45 @@ exports.createPaymentIntent = async (req, res) => {
       metadata,
     });
 
+    console.log("✅ Created Payment Intent:", paymentIntent.id);
+
     res.status(200).json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
-    console.error("❌ Error creating payment intent:", error.message);
+    console.error("❌ Error creating PaymentIntent:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
 
-// Handle Webhook Events
-exports.stripeWebhook = (req, res) => {
-  const sig = req.headers["stripe-signature"];
+// Stripe Webhook - Handle Payment Confirmation
+exports.stripeWebhook = async (req, res) => {
+  const sig = req.headers['stripe-signature'];
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
-    switch (event.type) {
-      case "payment_intent.succeeded":
-        const paymentIntent = event.data.object;
-        console.log("✅ Payment succeeded:", paymentIntent);
+    console.log(`⚡ Stripe event received: ${event.type}`);
 
-        // Optionally log or process metadata like NIC number
-        if (paymentIntent.metadata && paymentIntent.metadata.nic_number) {
-          console.log("🆔 NIC Number:", paymentIntent.metadata.nic_number);
-        }
-        break;
+    if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object;
 
-      case "payment_intent.payment_failed":
-        console.warn("❌ Payment failed:", event.data.object.last_payment_error);
-        break;
+      console.log("✅ Payment succeeded. Saving to MongoDB...");
 
-      default:
-        console.log(`Unhandled event type: ${event.type}`);
+      const newPayment = new Payment({
+        paymentIntentId: paymentIntent.id,
+        amount: paymentIntent.amount,
+        currency: paymentIntent.currency,
+        status: paymentIntent.status,
+        nicNumber: paymentIntent.metadata?.nic_number || "",
+      });
+
+      await newPayment.save();
+      console.log("💾 Payment saved successfully to MongoDB!");
     }
 
-    res.json({ received: true });
-  } catch (err) {
-    console.error("⚠️ Webhook error:", err.message);
-    res.status(400).send(`Webhook Error: ${err.message}`);
+    res.status(200).json({ received: true });
+  } catch (error) {
+    console.error("⚠️ Stripe Webhook error:", error.message);
+    res.status(400).send(`Webhook Error: ${error.message}`);
   }
 };
