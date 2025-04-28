@@ -8,6 +8,7 @@ import { Hotel, X, Loader, BedDouble, AlertTriangle, CheckCircle2 } from "lucide
 import AvailableRoomsTable from "../../components/Bawantha_components/AvailableRoomsTable";
 import RoomGrid from "../../components/Bawantha_components/RoomGrid";
 import Filters from "../../components/Bawantha_components/Filters";
+import { useNavigate } from 'react-router-dom';
 
 const Toast = ({ type, message, onClose }) => {
   return (
@@ -29,27 +30,34 @@ const Toast = ({ type, message, onClose }) => {
   );
 };
 
-// Helper function
-const getDatesBetween = (start, end) => {
-  const dates = [];
-  const current = new Date(start);
-  while (current <= end) {
-    dates.push(current.toISOString().split('T')[0]);
-    current.setDate(current.getDate() + 1);
-  }
-  return dates;
-};
+// // Helper function
+// const getDatesBetween = (start, end) => {
+//   const dates = [];
+//   const current = new Date(start);
+//   while (current <= end) {
+//     dates.push(current.toISOString().split('T')[0]);
+//     current.setDate(current.getDate() + 1);
+//   }
+//   return dates;
+// };
+
 
 const AvailableRooms = () => {
   const [rooms, setRooms] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
   const [bookedRoomNumbers, setBookedRoomNumbers] = useState([]);
-  const [bookings, setBookings] = useState([]);
+ 
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [selectedRoomNumber, setSelectedRoomNumber] = useState(null);
   const [selectedBookedDates, setSelectedBookedDates] = useState([]);
-  const [filtersKey, setFiltersKey] = useState(0);
+ 
+  const [searchTerm, setSearchTerm] = useState('');
+const [selectedDate, setSelectedDate] = useState('');
+const [acType, setAcType] = useState('All');
+const [bedType, setBedType] = useState('All');
+
+const navigate = useNavigate();
 
   const showToast = (type, message) => {
     setToast({ type, message });
@@ -68,16 +76,23 @@ const AvailableRooms = () => {
     try {
       const roomsResponse = await axios.get("http://localhost:5000/api/rooms");
       const bookingsResponse = await axios.get("http://localhost:5000/api/bookings");
-
+  
       setRooms(roomsResponse.data.data);
       setFilteredRooms(roomsResponse.data.data);
-
+  
       const booked = bookingsResponse.data.data;
       const bookedNumbers = booked.map((b) => b.roomNumber);
-      setBookings(booked);
-      setBookedRoomNumbers(bookedNumbers);
+      
 
-      setFiltersKey(prev => prev + 1);
+      setBookedRoomNumbers(bookedNumbers);
+  
+      setSelectedRoomNumber(null); // 🆕 Clear selected room
+      setSelectedBookedDates([]);  // 🆕 Clear calendar
+      setSearchTerm('');           // 🆕 Clear search
+      setSelectedDate('');         // 🆕 Clear date
+      setAcType('All');             // 🆕 Reset AC filter
+      setBedType('All');            // 🆕 Reset bed type
+  
       showToast('success', 'Room data loaded successfully');
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -86,6 +101,7 @@ const AvailableRooms = () => {
       setIsLoading(false);
     }
   }, []);
+  
 
   useEffect(() => {
     fetchData();
@@ -117,24 +133,13 @@ const AvailableRooms = () => {
 
   const handleRoomClick = (roomNumber) => {
     const isAvailable = visibleRooms.some((r) => r.roomNumber === roomNumber);
-
+  
     if (isAvailable) {
       setSelectedRoomNumber(roomNumber);
       setSelectedBookedDates([]);
     } else {
-      const booking = bookings.find((b) => b.roomNumber === roomNumber);
-      if (booking) {
-        setSelectedRoomNumber(null);
-        if (booking.checkInDate && booking.checkOutDate) {
-          const dates = getDatesBetween(
-            new Date(booking.checkInDate),
-            new Date(booking.checkOutDate)
-          );
-          setSelectedBookedDates(dates);
-        }
-      } else {
-        console.log("No booking for this room yet.");
-      }
+      // 🔴 Booked room ➔ Just navigate simply
+      navigate('/booked-rooms');
     }
   };
 
@@ -186,7 +191,18 @@ const AvailableRooms = () => {
           transition={{ duration: 0.4 }}
           className="bg-white p-5 shadow-sm rounded-lg border border-gray-200 mb-6"
         >
-          <Filters key={filtersKey} onFilter={filterRooms} />
+           <Filters 
+    
+    searchTerm={searchTerm}
+    setSearchTerm={setSearchTerm}
+    selectedDate={selectedDate}
+    setSelectedDate={setSelectedDate}
+    acType={acType}
+    setAcType={setAcType}
+    bedType={bedType}
+    setBedType={setBedType}
+    onFilter={filterRooms}
+  />
         </motion.div>
 
         {/* Main Layout */}
