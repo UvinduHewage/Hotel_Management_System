@@ -118,9 +118,10 @@ const ViewBookingPage = () => {
 
                   {/* Make Payment Button */}
                   <button
-                    onClick={() => navigate(`/payments/${booking._id}`)}
+                    onClick={() => navigate(`/bill/${booking._id}`)}
                     className="px-6 py-2 rounded-md bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600 transition"
                   >
+                    {/* <Link to={`/bill/${booking._id}`}>View Bill</Link> */}
                     Make Payment
                   </button>
                 </div>
