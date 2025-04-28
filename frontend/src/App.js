@@ -17,13 +17,14 @@ import Signup from "./components/AuthComponents/Signup";
 
 
 import PaymentWithStripe from "./components/Dineth_Components/PaymentWithStripe"; // ✅ Correct Payment Component
+import ViewPage from "./pages/Dineth_pages/ViewPage";
+import Bills_table from "./pages/Dineth_pages/Bills_table";
 
 import AvailableRooms from "./pages/Bawantha_pages/AvailableRooms";
 import BookedRooms from "./pages/Bawantha_pages/BookedRooms";
 import ReservationHistory from "./pages/Bawantha_pages/ReservationHistory";
 import BookingPage from "./pages/Bawantha_pages/BookingPage"; 
 import ViewBookingPage from "./pages/Bawantha_pages/ViewBookingPage";
-import ViewPage from "./pages/Dineth_pages/ViewPage";
 import UpdateBookingPage from "./pages/Bawantha_pages/UpdateBookingPage";
 
 import RoomGallery from "./pages/Tharinda_pages/RoomGallery";
@@ -177,9 +178,10 @@ function App() {
               <Route path="/table" element={<ProtectedRoute element={<RoomTable />} requiredRole="admin" />} />
               <Route path="/rooms/update/:id" element={<ProtectedRoute element={<UpdateRoom />} requiredRole="admin" />} />
               <Route path="/create-room" element={<ProtectedRoute element={<CreateRoom />} requiredRole="admin" />} />
-              <Route path="/bills/67fb155cb9bd956c0bf5bbea" element={<ProtectedRoute element={< ViewPage/>} requiredRole="admin" />} />
+              <Route path="/bill/:id" element={<ProtectedRoute element={< ViewPage/>} requiredRole="admin" />} />
+              <Route path="/billTable" element={<ProtectedRoute element={< Bills_table/>} requiredRole="admin" />} />
 
-             
+              
 
               {/* Catch all */}
               <Route path="*" element={isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />} />
