@@ -3,7 +3,7 @@ import axios from "axios";
 
 import Calendar from "../../components/Bawantha_components/Calendar";
 import BookedRoomsFilter from "../../components/Bawantha_components/BookedRoomsFilter";
-import BookedRoomsTable from "../../components/Bawantha_components/BookedRoomsTable";
+import BookedRoomsTable from "../../components/Dineth_Components/BillingTable";
 import RoomGrid from "../../components/Bawantha_components/RoomGrid";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
@@ -18,7 +18,7 @@ const BookedRooms = () => {
   const location = useLocation();
   const incomingRoomNumber = location.state?.roomNumber || null;
 
-  const fetchBookedRooms = () => {
+  const fetchBills = () => {
     setIsLoading(true);
     axios
       .get("http://localhost:5000/api/bookings")
@@ -35,7 +35,7 @@ const BookedRooms = () => {
   };
 
   useEffect(() => {
-    fetchBookedRooms();
+    fetchBills();
   }, []);
 
   useEffect(() => {
@@ -129,10 +129,8 @@ const BookedRooms = () => {
     <div>
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 py-6 px-8 shadow-sm mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">
-          Hotel Management System
-        </h1>
-        <p className="text-gray-600">Room Bookings Dashboard</p>
+        <h1 className="text-2xl font-bold text-gray-800 text-center">Payment Mangement Dashboard</h1>  
+        {/* <p className="text-gray-600">Bill mangement Dashboard</p> */}
       </div>
 
       <motion.div
@@ -143,14 +141,21 @@ const BookedRooms = () => {
       >
         {/* Filter Section */}
         <motion.div
-          className="bg-white p-5 shadow-lg rounded-lg mb-6 border-l-4 border-blue-500"
-          variants={itemVariants}
-        >
-          <h2 className="text-lg font-semibold text-gray-700 mb-3">
-            Search & Filter
-          </h2>
-          <BookedRoomsFilter onFilter={handleFilter} />
-        </motion.div>
+  className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 p-8 rounded-2xl shadow-lg mb-10"
+  variants={itemVariants}
+>
+  <h2 className="text-2xl font-bold text-gray-700 mb-6 tracking-wide text-center">
+    🔎 Find Your Bill
+  </h2>
+
+  <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300">
+    <BookedRoomsFilter onFilter={handleFilter} />
+  </div>
+</motion.div>
+
+
+
+
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Main Table Section */}
@@ -160,13 +165,13 @@ const BookedRooms = () => {
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800">
-                Booked Rooms
+                Saved customer's Bills:
               </h2>
               <motion.button
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={fetchBookedRooms}
+                onClick={fetchBills}
               >
                 Refresh
               </motion.button>
@@ -179,7 +184,7 @@ const BookedRooms = () => {
             ) : (
               <BookedRoomsTable
                 bookedRooms={filteredTableBookings}
-                refreshBookings={fetchBookedRooms}
+                refreshBookings={fetchBills}
               />
             )}
           </motion.div>
@@ -187,7 +192,7 @@ const BookedRooms = () => {
           {/* Sidebar Section */}
           <motion.div className="lg:w-1/4 space-y-6" variants={itemVariants}>
             {/* Room Grid */}
-            <div className="bg-white p-5 shadow-lg rounded-lg border-t-4 border-indigo-500">
+            {/* <div className="bg-white p-5 shadow-lg rounded-lg border-t-4 border-indigo-500">
               <h3 className="text-lg font-semibold mb-4 text-gray-700">
                 Room Overview
               </h3>
@@ -196,10 +201,10 @@ const BookedRooms = () => {
                 mode="booked"
                 bookings={bookedRooms}
                 onRoomClick={handleRoomClick}
-              />
+              /> */}
 
               {/* Room status legend */}
-              <div className="mt-4 flex flex-wrap gap-3">
+              {/* <div className="mt-4 flex flex-wrap gap-3">
                 <div className="flex items-center">
                   <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
                   <span className="text-xs text-gray-600">Available</span>
@@ -213,10 +218,10 @@ const BookedRooms = () => {
                   <span className="text-xs text-gray-600">Checking Out Today</span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Calendar */}
-            <div className="bg-white p-5 shadow-lg rounded-lg border-t-4 border-purple-500">
+            {/* <div className="bg-white p-5 shadow-lg rounded-lg border-t-4 border-purple-500">
               <h3 className="text-lg font-semibold mb-4 text-gray-700">
                 Availability Calendar
               </h3>
@@ -224,7 +229,7 @@ const BookedRooms = () => {
                 selectedDates={selectedBookedDates}
                 onDateSelect={(date) => console.log("Selected date:", date)} 
               />
-            </div>
+            </div> */}
 
             {/* Quick Stats */}
             <motion.div
