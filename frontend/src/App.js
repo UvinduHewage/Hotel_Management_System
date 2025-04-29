@@ -160,7 +160,8 @@ function App() {
               <Route path="/roomsUI" element={<ProtectedRoute element={<RoomGallery />} />} />
               <Route path="/room-details/:roomNumber" element={<ProtectedRoute element={<RoomDetailsPage />} />} />
               <Route path="/rooms/:id" element={<ProtectedRoute element={<RoomDetail />} />} />
-              <Route path="/payment" element={<ProtectedRoute element={<PaymentWithStripe />} />} /> {/* ✅ Payment Page */}
+              <Route path="/payment/:id" element={<ProtectedRoute element={<PaymentWithStripe />} />} />
+
 
               {/* Admin only routes */}
               <Route path="/guest-management" element={<ProtectedRoute element={<GuestManagementDashboard />} requiredRole="admin" />} />
