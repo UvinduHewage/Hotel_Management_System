@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import Calendar from "../../components/Bawantha_components/Calendar";
+
 import BookedRoomsFilter from "../../components/Bawantha_components/BookedRoomsFilter";
 import BookedRoomsTable from "../../components/Dineth_Components/BillingTable";
-import RoomGrid from "../../components/Bawantha_components/RoomGrid";
+
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const BookedRooms = () => {
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredTableBookings, setFilteredTableBookings] = useState([]);
-  const [selectedBookedDates, setSelectedBookedDates] = useState([]); // 🆕
+  
 
   const location = useLocation();
   const incomingRoomNumber = location.state?.roomNumber || null;
@@ -49,15 +49,7 @@ const BookedRooms = () => {
   }, [incomingRoomNumber, originalData]);
 
   // 🆕 Helper function to get dates between check-in and check-out
-  const getDatesBetween = (start, end) => {
-    const dates = [];
-    const current = new Date(start);
-    while (current <= end) {
-      dates.push(current.toISOString().split('T')[0]);
-      current.setDate(current.getDate() + 1);
-    }
-    return dates;
-  };
+ 
 
   const handleFilter = ({ roomNumber, checkInDate, checkOutDate }) => {
     let filtered = [...originalData];
@@ -82,24 +74,7 @@ const BookedRooms = () => {
     setBookedRooms(filtered);
   };
 
-  const handleRoomClick = (roomNumber) => {
-    const filtered = originalData.filter((room) => room.roomNumber === roomNumber);
-
-    if (filtered.length > 0) {
-      setFilteredTableBookings(filtered); // ✅ Update table
-
-      const booking = filtered[0];
-      if (booking.checkInDate && booking.checkOutDate) {
-        const dates = getDatesBetween(
-          new Date(booking.checkInDate),
-          new Date(booking.checkOutDate)
-        );
-        setSelectedBookedDates(dates); // ✅ Highlight booking dates on Calendar
-      }
-    } else {
-      console.warn("No booking found for room:", roomNumber);
-    }
-  };
+ 
 
   // Animation variants
   const containerVariants = {
