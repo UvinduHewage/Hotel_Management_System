@@ -19,6 +19,7 @@ import Signup from "./components/AuthComponents/Signup";
 import PaymentWithStripe from "./components/Dineth_Components/PaymentWithStripe"; // ✅ Correct Payment Component
 import ViewPage from "./pages/Dineth_pages/ViewPage";
 import Bills_table from "./pages/Dineth_pages/Bills_table";
+import BillEditPage from "./pages/Dineth_pages/BillEditPage";
 
 import AvailableRooms from "./pages/Bawantha_pages/AvailableRooms";
 import BookedRooms from "./pages/Bawantha_pages/BookedRooms";
@@ -181,6 +182,8 @@ function App() {
               <Route path="/create-room" element={<ProtectedRoute element={<CreateRoom />} requiredRole="admin" />} />
               <Route path="/bill/:id" element={<ProtectedRoute element={< ViewPage/>} requiredRole="admin" />} />
               <Route path="/billTable" element={<ProtectedRoute element={< Bills_table/>} requiredRole="admin" />} />
+              <Route path="/bills/:id/edit"  element={<ProtectedRoute element={< BillEditPage/>} requiredRole="admin" />} />
+              
 
               
 
