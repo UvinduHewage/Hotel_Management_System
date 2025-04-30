@@ -1,38 +1,30 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const BookedRoomsTable = ({ bookedRooms, refreshBookings }) => {
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState(null);
-
+  const [selectedBillId, setSelectedBillId] = useState(null);
   const navigate = useNavigate();
 
-
-  // Handle Booking Deletion
-  const handleDeleteBooking = () => {
-    const { bookingId, roomNumber } = selectedBooking;
-
-    // Delete the booking
-    axios.delete(`http://localhost:5000/api/bookings/${bookingId}`)
+  // ✅ Delete Bill Handler
+  const handleDeleteBill = () => {
+    axios
+      .delete(`http://localhost:5000/api/bills/${selectedBillId}`)
       .then(() => {
-        // Make the room available again
-        axios.put(`http://localhost:5000/api/rooms/${roomNumber}/book`, { availability: true })
-          .then(() => {
-            toast.success("Booking canceled! Room is now available.");
-            refreshBookings();
-            setShowConfirmPopup(false);
-          })
-          .catch(error => console.error("Error updating room availability:", error));
+        toast.success("✅ Bill deleted successfully");
+        refreshBookings();
+        setShowConfirmPopup(false);
       })
-      .catch(error => console.error("Error deleting booking:", error));
+      .catch((error) => {
+        console.error("Error deleting bill:", error);
+        toast.error("❌ Failed to delete bill");
+      });
   };
 
-  // Show confirmation popup
-  const confirmDelete = (bookingId, roomNumber) => {
-    setSelectedBooking({ bookingId, roomNumber });
+  const confirmDelete = (billId) => {
+    setSelectedBillId(billId);
     setShowConfirmPopup(true);
   };
 
@@ -49,78 +41,77 @@ const BookedRoomsTable = ({ bookedRooms, refreshBookings }) => {
           </tr>
         </thead>
         <tbody>
-  {bookedRooms.length > 0 ? (
-    [...bookedRooms].sort((a, b) => b._id.localeCompare(a._id)).map((room) => (
-      <tr
-        key={room._id}
-        className="text-center cursor-pointer hover:bg-gray-100 transition"
-        onClick={() => navigate(`/bookings/${room._id}`)}
-      >
-        <td className="border p-2">{room._id}</td>
-        <td className="border p-2">{room.roomNumber}</td>
-        <td className="border p-2">{room.nic}</td>
-        <td className="border p-2">{room.customerName}</td>
+          {bookedRooms.length > 0 ? (
+            [...bookedRooms]
+              .sort((a, b) => b._id.localeCompare(a._id))
+              .map((room) => (
+                <tr
+                  key={room._id}
+                  className="text-center cursor-pointer hover:bg-gray-100 transition"
+                  onClick={() => navigate(`/bookings/${room._id}`)}
+                >
+                  <td className="border p-2">{room._id}</td>
+                  <td className="border p-2">{room.roomNumber}</td>
+                  <td className="border p-2">{room.nic}</td>
+                  <td className="border p-2">{room.customerName}</td>
 
-        {/* Action Buttons */}
-        <td className="border p-2">
-  <div className="flex items-center justify-center gap-2 flex-nowrap">
-    <Link
-      onClick={(e) => e.stopPropagation()}
-      to={`/payment/${room._id}`}
-    >
-      <button className="bg-green-500 text-white shadow-md rounded-md px-4 py-2 hover:bg-green-600">
-        Pay
-      </button>
-    </Link>
+                  <td className="border p-2">
+                    <div className="flex items-center justify-center gap-2 flex-nowrap">
+                      <Link
+                        onClick={(e) => e.stopPropagation()}
+                        to={`/payment/${room._id}`}
+                      >
+                        <button className="bg-green-500 text-white shadow-md rounded-md px-4 py-2 hover:bg-green-600">
+                          Pay
+                        </button>
+                      </Link>
 
-    <Link
-      onClick={(e) => e.stopPropagation()}
-      to={`/bookings/${room._id}/edit`}
-    >
-      <button className="bg-yellow-500 text-white shadow-md rounded-md px-4 py-2 hover:bg-yellow-600">
-        Update
-      </button>
-    </Link>
+                      <Link
+                        onClick={(e) => e.stopPropagation()}
+                        to={`/bills/${room._id}/edit`}
+                      >
+                        <button className="bg-yellow-500 text-white shadow-md rounded-md px-4 py-2 hover:bg-yellow-600">
+                          Update
+                        </button>
+                      </Link>
 
-    <button
-      className="bg-red-500 text-white shadow-md rounded-md px-4 py-2 hover:bg-red-600"
-      onClick={(e) => {
-        e.stopPropagation();
-        confirmDelete(room._id, room.roomNumber);
-      }}
-    >
-      Delete
-    </button>
-  </div>
-</td>
-
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="5" className="text-center p-4">
-        No booked rooms available
-      </td>
-    </tr>
-  )}
-</tbody>
-
+                      <button
+                        className="bg-red-500 text-white shadow-md rounded-md px-4 py-2 hover:bg-red-600"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          confirmDelete(room._id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center p-4">
+                No booked rooms available
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
 
-      {/* Confirmation Popup */}
+      {/* ✅ Confirmation Popup */}
       {showConfirmPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Confirm Booking Cancellation</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Confirm Bill Deletion</h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to cancel this booking?
+              Are you sure you want to delete this bill?
             </p>
             <div className="flex flex-row-reverse gap-4">
               <button
-                onClick={handleDeleteBooking}
+                onClick={handleDeleteBill}
                 className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
               >
-                Yes, Cancel Booking
+                Yes, Delete
               </button>
               <button
                 onClick={() => setShowConfirmPopup(false)}

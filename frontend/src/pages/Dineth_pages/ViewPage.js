@@ -37,6 +37,39 @@ const BillPage = () => {
     });
   };
 
+  const handleSaveBill = async () => {
+    try {
+      const total = calculateTotal(booking);
+  
+      const billPayload = {
+        bookingId: booking._id,
+        customerName: booking.customerName,
+        nic: booking.nic,
+        email: booking.email,
+        phone: booking.phone,
+        roomNumber: booking.roomNumber,
+        roomType: booking.roomType,
+        gender: booking.gender,
+        checkInDate: booking.checkInDate,
+        checkOutDate: booking.checkOutDate,
+        pricePerNight: booking.price,
+        totalAmount: total,
+      };
+  
+      await axios.post("http://localhost:5000/api/bills/create", billPayload);
+  
+      alert("✅ Bill saved successfully!");
+  
+      // ✅ Navigate to BillTable after saving
+      navigate("/BillTable");
+  
+    } catch (err) {
+      console.error("Error saving bill:", err);
+      alert("❌ Failed to save bill.");
+    }
+  };
+  
+
   return (
     <>
       <div
@@ -79,12 +112,12 @@ const BillPage = () => {
                   <p className="text-4xl font-bold mt-4">${calculateTotal(booking)}</p>
                 </div>
                 <button
-                    onClick={() => navigate(`/billTable`)}
-                    className="px-6 py-2 rounded-md bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600 transition"
-                  >
-                    {/* <Link to={`/bill/${booking._id}`}>View Bill</Link> */}
-                    Save Bill
-                  </button>
+  onClick={handleSaveBill}
+  className="px-6 py-2 rounded-md bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600 transition"
+>
+  Save Bill
+</button>
+
 
               </div>
               

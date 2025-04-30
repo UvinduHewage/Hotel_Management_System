@@ -21,7 +21,7 @@ const BookedRooms = () => {
   const fetchBills = () => {
     setIsLoading(true);
     axios
-      .get("http://localhost:5000/api/bookings")
+      .get("http://localhost:5000/api/bills")
       .then((response) => {
         setBookedRooms(response.data.data);
         setOriginalData(response.data.data);
@@ -242,7 +242,7 @@ const BookedRooms = () => {
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Bookings:</span>
+                  <span className="text-gray-600">Total Bills:</span>
                   <span className="font-semibold">{bookedRooms.length}</span>
                 </div>
                 <div className="flex justify-between items-center">

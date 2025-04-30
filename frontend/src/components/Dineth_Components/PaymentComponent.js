@@ -24,12 +24,12 @@ const PaymentComponent = ({ bookingId }) => {
   useEffect(() => {
     const fetchBooking = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5000/api/bookings/${bookingId}`);
+        const { data } = await axios.get(`http://localhost:5000/api/bills/${bookingId}`);
         console.log("📦 Booking fetched:", data);
-  
-        const booking = data.data; // ✅ Extract the booking object from `data`
-  
-        setAmount(booking.price || booking.totalCost || '');
+
+        const booking = data.data; // because backend returns { success: true, data: { ... } }
+
+        setAmount(booking.totalAmount || booking.totalCost || '');
         setNic(booking.nic || '');
         setCardholderName(booking.customerName || '');
       } catch (error) {
@@ -39,10 +39,9 @@ const PaymentComponent = ({ bookingId }) => {
         setLoading(false);
       }
     };
-  
+
     if (bookingId) fetchBooking();
   }, [bookingId]);
-  
 
   // ✅ Handle Stripe Payment
   const handlePayment = async () => {
@@ -77,8 +76,16 @@ const PaymentComponent = ({ bookingId }) => {
       if (stripeError) {
         setError(stripeError.message);
       } else {
+        // ✅ Payment success - delete booking
+        try {
+          await axios.delete(`http://localhost:5000/api/bookings/${bookingId}`);
+          console.log("✅ Booking deleted after payment");
+        } catch (err) {
+          console.error("❌ Error deleting booking after payment:", err);
+        }
+
         alert('✅ Payment Successful!');
-        navigate('/'); // or redirect to /payment-success
+        navigate('/payment-success'); // Navigate to success page
       }
     } catch (err) {
       console.error('Payment error:', err);
