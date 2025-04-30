@@ -8,6 +8,7 @@ const roomRoutes = require("./routes/Tharinda_routes/roomRoutes");
 const bookingRoutes = require("./routes/Bawantha_routes/bookingRoutes");
 const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes");
 const paymentRoutes = require("./routes/Dineth_routes/paymentRoutes");
+const billRoutes = require("./routes/Dineth_routes/billRoutes");
 
 // Import controllers
 const paymentController = require("./controllers/Dineth_controllers/paymentController"); // ✅ Import your payment controller
@@ -28,6 +29,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Normal API Routes
 app.use("/api/rooms", roomRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/bills", billRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/booking-history", bookingHistoryRoutes);
 
