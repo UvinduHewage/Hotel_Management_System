@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import Calendar from "../../components/Bawantha_components/Calendar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Hotel, X, Loader, BedDouble, AlertTriangle, CheckCircle2 } from "lucide-react";
@@ -9,6 +8,7 @@ import { Hotel, X, Loader, BedDouble, AlertTriangle, CheckCircle2 } from "lucide
 import AvailableRoomsTable from "../../components/Bawantha_components/AvailableRoomsTable";
 import RoomGrid from "../../components/Bawantha_components/RoomGrid";
 import Filters from "../../components/Bawantha_components/Filters";
+import { useNavigate } from 'react-router-dom';
 
 const Toast = ({ type, message, onClose }) => {
   return (
@@ -21,11 +21,7 @@ const Toast = ({ type, message, onClose }) => {
         ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
       `}
     >
-      {type === 'success' ? (
-        <CheckCircle2 size={24} />
-      ) : (
-        <AlertTriangle size={24} />
-      )}
+      {type === 'success' ? <CheckCircle2 size={24} /> : <AlertTriangle size={24} />}
       <div className="flex-grow">{message}</div>
       <button onClick={onClose} className="hover:bg-white/20 rounded-full p-1">
         <X size={20} />
@@ -34,15 +30,34 @@ const Toast = ({ type, message, onClose }) => {
   );
 };
 
+// // Helper function
+// const getDatesBetween = (start, end) => {
+//   const dates = [];
+//   const current = new Date(start);
+//   while (current <= end) {
+//     dates.push(current.toISOString().split('T')[0]);
+//     current.setDate(current.getDate() + 1);
+//   }
+//   return dates;
+// };
+
+
 const AvailableRooms = () => {
   const [rooms, setRooms] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
   const [bookedRoomNumbers, setBookedRoomNumbers] = useState([]);
-  const [bookings, setBookings] = useState([]);
+ 
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const [selectedRoomNumber, setSelectedRoomNumber] = useState(null);
+  const [selectedBookedDates, setSelectedBookedDates] = useState([]);
+ 
+  const [searchTerm, setSearchTerm] = useState('');
+const [selectedDate, setSelectedDate] = useState('');
+const [acType, setAcType] = useState('All');
+const [bedType, setBedType] = useState('All');
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
   const showToast = (type, message) => {
     setToast({ type, message });
@@ -55,31 +70,42 @@ const AvailableRooms = () => {
     setToast(null);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const roomsResponse = await axios.get("http://localhost:5000/api/rooms");
-        const bookingsResponse = await axios.get("http://localhost:5000/api/bookings");
-        
-        setRooms(roomsResponse.data.data);
-        setFilteredRooms(roomsResponse.data.data);
-        
-        const booked = bookingsResponse.data.data;
-        const bookedNumbers = booked.map((b) => b.roomNumber);
-        setBookings(booked);
-        setBookedRoomNumbers(bookedNumbers);
-        showToast('success', 'Room data loaded successfully');
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        showToast('error', 'Failed to load room data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // 🆕 fetchData wrapped with useCallback
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const roomsResponse = await axios.get("http://localhost:5000/api/rooms");
+      const bookingsResponse = await axios.get("http://localhost:5000/api/bookings");
+  
+      setRooms(roomsResponse.data.data);
+      setFilteredRooms(roomsResponse.data.data);
+  
+      const booked = bookingsResponse.data.data;
+      const bookedNumbers = booked.map((b) => b.roomNumber);
+      
 
-    fetchData();
+      setBookedRoomNumbers(bookedNumbers);
+  
+      setSelectedRoomNumber(null); // 🆕 Clear selected room
+      setSelectedBookedDates([]);  // 🆕 Clear calendar
+      setSearchTerm('');           // 🆕 Clear search
+      setSelectedDate('');         // 🆕 Clear date
+      setAcType('All');             // 🆕 Reset AC filter
+      setBedType('All');            // 🆕 Reset bed type
+  
+      showToast('success', 'Room data loaded successfully');
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      showToast('error', 'Failed to load room data');
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+  
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const filterRooms = ({ searchTerm, selectedDate, acFilter, bedType }) => {
     let filtered = [...rooms];
@@ -97,6 +123,8 @@ const AvailableRooms = () => {
     }
 
     setFilteredRooms(filtered);
+    setSelectedRoomNumber(null);
+    setSelectedBookedDates([]);
   };
 
   const visibleRooms = filteredRooms.filter(
@@ -104,13 +132,20 @@ const AvailableRooms = () => {
   );
 
   const handleRoomClick = (roomNumber) => {
-    const booking = bookings.find((b) => b.roomNumber === roomNumber);
-    if (booking) {
-      navigate(`/bookings/${booking._id}`);
+    const isAvailable = visibleRooms.some((r) => r.roomNumber === roomNumber);
+  
+    if (isAvailable) {
+      setSelectedRoomNumber(roomNumber);
+      setSelectedBookedDates([]);
     } else {
-      console.log("No booking for this room yet.");
+      // 🔴 Booked room ➔ Just navigate simply
+      navigate('/booked-rooms');
     }
   };
+
+  const displayedRooms = selectedRoomNumber
+    ? visibleRooms.filter((room) => room.roomNumber === selectedRoomNumber)
+    : visibleRooms;
 
   if (isLoading) {
     return (
@@ -125,14 +160,10 @@ const AvailableRooms = () => {
 
   return (
     <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50 relative">
-      {/* Toast Notification */}
+      {/* Toast */}
       <AnimatePresence>
         {toast && (
-          <Toast 
-            type={toast.type} 
-            message={toast.message} 
-            onClose={closeToast} 
-          />
+          <Toast type={toast.type} message={toast.message} onClose={closeToast} />
         )}
       </AnimatePresence>
 
@@ -153,17 +184,28 @@ const AvailableRooms = () => {
           </div>
         </motion.div>
 
-        {/* Filters Card */}
+        {/* Filters */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="bg-white p-5 shadow-sm rounded-lg border border-gray-200 mb-6"
         >
-          <Filters onFilter={filterRooms} />
+           <Filters 
+    
+    searchTerm={searchTerm}
+    setSearchTerm={setSearchTerm}
+    selectedDate={selectedDate}
+    setSelectedDate={setSelectedDate}
+    acType={acType}
+    setAcType={setAcType}
+    bedType={bedType}
+    setBedType={setBedType}
+    onFilter={filterRooms}
+  />
         </motion.div>
 
-        {/* Main Content Layout */}
+        {/* Main Layout */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* LEFT: Available Rooms Table */}
           <motion.div
@@ -174,36 +216,48 @@ const AvailableRooms = () => {
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800">Available Rooms</h2>
-              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                {visibleRooms.length} Rooms
-              </span>
+              <div className="flex items-center gap-3">
+                {/* Refresh Button */}
+                <motion.button
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={fetchData}
+                >
+                  Refresh
+                </motion.button>
+                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                  {displayedRooms.length} Rooms
+                </span>
+              </div>
             </div>
-            
+
             <div className="overflow-x-auto">
-              <AvailableRoomsTable rooms={visibleRooms} />
+              <AvailableRoomsTable rooms={displayedRooms} />
             </div>
           </motion.div>
 
-          {/* RIGHT: Room Status and Calendar in a column */}
+          {/* RIGHT: RoomGrid and Calendar */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:w-1/4 flex flex-col gap-6"
           >
-            {/* Room Status Card */}
+            {/* Room Status */}
             <div className="bg-white p-5 shadow-sm rounded-lg border border-gray-200">
               <div className="flex items-center mb-4">
                 <BedDouble size={24} className="text-blue-600 mr-2" />
                 <h3 className="text-lg font-semibold text-gray-800">Room Status</h3>
               </div>
-              
+
               <RoomGrid
                 rooms={rooms}
+                visibleRooms={visibleRooms}
                 mode="available"
                 onRoomClick={handleRoomClick}
               />
-              
+
               <div className="flex justify-between text-sm mt-4 text-gray-600">
                 <div className="flex items-center">
                   <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
@@ -216,14 +270,16 @@ const AvailableRooms = () => {
               </div>
             </div>
 
-            {/* Calendar Card - Directly below Room Status */}
+            {/* Calendar */}
             <div className="bg-white p-5 shadow-sm rounded-lg border border-gray-200">
               <h3 className="text-lg font-semibold mb-4 text-gray-800">Availability Calendar</h3>
-              <Calendar onDateSelect={(date) => console.log("Selected date:", date)} />
+              <Calendar
+                selectedDates={selectedBookedDates}
+                onDateSelect={(date) => console.log("Selected date:", date)}
+              />
             </div>
           </motion.div>
         </div>
-      
       </div>
     </div>
   );

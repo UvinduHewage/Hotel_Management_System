@@ -1,8 +1,10 @@
+
 const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+const paymentRoutes = require("./routes/Dineth_routes/paymentRoutes");
 const staffRoutes = require("./routes/Uvindu_routes/staffRoutes");
 const announcementRoutes = require("./routes/Uvindu_routes/announcementsRoutes");
 const adminRoutes = require('./routes/Uvindu_routes/adminRoutes');
@@ -22,6 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api", staffRoutes); 
 app.use("/api", announcementRoutes);
+app.use("/api/payment", paymentRoutes);
 
 //Login routes
 app.use('/api/auth', authRoutes);

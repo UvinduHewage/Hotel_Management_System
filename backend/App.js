@@ -1,44 +1,42 @@
 const express = require("express");
-const cors = require("cors"); 
+const bodyParser = require("body-parser");
+const cors = require("cors");
 const path = require("path");
 
-
-//Tharinda ................................................................
+// Import routes
 const roomRoutes = require("./routes/Tharinda_routes/roomRoutes"); 
+const bookingRoutes = require("./routes/Bawantha_routes/bookingRoutes");
+const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes");
+const paymentRoutes = require("./routes/Dineth_routes/paymentRoutes");
+const billRoutes = require("./routes/Dineth_routes/billRoutes");
+
+// Import controllers
+const paymentController = require("./controllers/Dineth_controllers/paymentController"); // ✅ Import your payment controller
 
 const app = express();
 
-// Middleware
-app.use(express.json());
+// Stripe Webhook Route - use express.raw() middleware FIRST (before express.json())
+app.post("/api/payment/stripe-webhook", express.raw({ type: "application/json" }), paymentController.stripeWebhook);
+
+console.log(" App.js Loaded");
+
+// Middlewares (AFTER webhook route)
 app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Debugging Log
-console.log(" App.js Loaded");
-
-// Define API Routes
-app.use("/api/rooms", roomRoutes); 
-
-
-
-//Bawantha......................................................................
-
-const bookingRoutes = require("./routes/Bawantha_routes/bookingRoutes");
-const bookingHistoryRoutes = require("./routes/Bawantha_routes/bookingHistoryRoutes");
-
-// Define API Routes
-
+// Normal API Routes
+app.use("/api/rooms", roomRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/api/bills", billRoutes);
 app.use("/api/bookings", bookingRoutes);
-
-// booking history
 app.use("/api/booking-history", bookingHistoryRoutes);
 
 
-// Default Route for Testing
+// Root route
 app.get("/", (req, res) => {
-  res.send("Hotel Booking API is Running!");
+  res.send("Hotel Management API is running");
 });
-
 
 module.exports = app;

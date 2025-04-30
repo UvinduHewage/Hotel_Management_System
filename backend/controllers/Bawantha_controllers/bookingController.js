@@ -1,6 +1,7 @@
 const Booking = require("../../models/Bawantha_models/Booking");
+const BookingHistory = require("../../models/Bawantha_models/BookingHistory");
 
-//GET All Bookings
+// GET All Bookings
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find();
@@ -11,7 +12,41 @@ exports.getAllBookings = async (req, res) => {
   }
 };
 
-//GET Booking by ID
+// POST Create a Booking
+exports.createBooking = async (req, res) => {
+  try {
+    // 1. Create booking
+    const newBooking = await Booking.create(req.body);
+
+    if (newBooking) {
+      // 2. If booking created, save in history
+      const historyData = {
+        roomNumber: newBooking.roomNumber,
+        customerName: newBooking.customerName,
+        nic: newBooking.nic,
+        email: newBooking.email,
+        phone: newBooking.phone,
+        gender: newBooking.gender,
+        checkInDate: newBooking.checkInDate,
+        checkOutDate: newBooking.checkOutDate,
+        roomType: newBooking.roomType,
+        price: newBooking.price,
+        image: newBooking.image,
+        status: "Booked", // Start as Booked
+        bookedDate: new Date()
+      };
+
+      await BookingHistory.create(historyData);
+    }
+
+    res.status(201).json({ success: true, data: newBooking });
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// GET Booking by ID
 exports.getBookingById = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
@@ -25,28 +60,7 @@ exports.getBookingById = async (req, res) => {
   }
 };
 
-// exports.getAllBookings = async (req, res) => {
-//   try {
-//     const bookings = await Booking.find({}, "_id roomNumber customerName nic phone checkInDate"); 
-//   } catch (error) {
-//     console.error("Error fetching reservations:", error);
-//     res.status(500).json({ success: false, error: error.message });
-//   }
-// };
-
-// POST Create a Booking
-exports.createBooking = async (req, res) => {
-  try {
-    const newBooking = await Booking.create(req.body);
-    res.status(201).json({ success: true, data: newBooking });
-  } catch (error) {
-    console.error(" Error creating booking:", error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
-
-// PUT Update Booking Status
+// PUT Update Booking
 exports.updateBooking = async (req, res) => {
   try {
     const updatedBooking = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -55,7 +69,7 @@ exports.updateBooking = async (req, res) => {
     }
     res.status(200).json({ success: true, data: updatedBooking });
   } catch (error) {
-    console.error(" Error updating booking:", error);
+    console.error("Error updating booking:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 };
@@ -67,6 +81,13 @@ exports.deleteBooking = async (req, res) => {
     if (!deletedBooking) {
       return res.status(404).json({ success: false, message: "Booking not found" });
     }
+
+    // Update corresponding history record status to 'Cancelled'
+    await BookingHistory.findOneAndUpdate(
+      { roomNumber: deletedBooking.roomNumber, nic: deletedBooking.nic },
+      { status: "Cancelled" }
+    );
+
     res.status(200).json({ success: true, message: "Booking deleted successfully" });
   } catch (error) {
     console.error("Error deleting booking:", error);

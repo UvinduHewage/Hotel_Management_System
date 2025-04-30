@@ -21,7 +21,7 @@ const ReservationHistory = () => {
   const fetchReservations = () => {
     setIsLoading(true);
     axios
-      .get("http://localhost:5000/api/bookings")
+      .get("http://localhost:5000/api/booking-history")
       .then((response) => {
         const sortedData = response.data.data.sort(
           (a, b) => b._id.localeCompare(a._id) // Newest bookings first
