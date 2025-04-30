@@ -1,0 +1,445 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+
+
+
+/*  */
+/* App.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  margin-top: 0;  /* Reset the margin-top here */
+}
+
+header {
+  position: fixed;  /* Fixed to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2d3748;  /* Tailwind gray-800 */
+  padding: 1rem 2rem;
+  z-index: 1000;  /* Ensure it stays above the sidebar */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* App.css */
+
+/* AddStaff.js */
+
+/* Set up a clean background for the app */
+body {
+  font-family: 'Arial', sans-serif;
+  /* background: url('https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed; */
+  background-color: #f5f5f5; /* optional neutral background */
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Styling for the form container */
+.form-container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 100%;
+  backdrop-filter: blur(10px);
+}
+
+/* Shift checkbox container */
+.shift-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.shift-checkbox:hover {
+  transform: scale(1.05);
+}
+
+
+/* Dashboad.js */
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar {
+  scroll-behavior: smooth;
+}
+
+
+
+
+
+
+
+
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: center;
+  padding: 10px;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+button {
+  display: block;
+  width: 100%;
+  text-align: center;
+} */
+
+
+/*  */
+/* App.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  margin-top: 0;  /* Reset the margin-top here */
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(15, 32, 39, 0.95); /* Darker Blue */
+  padding: 1rem 2rem;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  transition: all 0.3s ease-in-out;
+}
+
+
+/* App.css */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+
+
+
+
+/* AddStaff.js */
+
+/* Set up a clean background for the app */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff; /* White */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+} 
+
+
+.shadow-neon {
+  box-shadow: 0 0 10px rgba(70, 130, 180, 0.5);
+  transition: box-shadow 0.3s;
+}
+.hover-neon:hover {
+  box-shadow: 0 0 20px rgba(70, 130, 180, 1);
+}
+.border-neon {
+  border-color: rgba(70, 130, 180, 0.5);
+}
+.glass-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+
+/* Enhanced Typography */
+h1, h2 {
+  font-weight: 700;
+  color: #41f5f5;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+}
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+}
+
+
+h1:hover, h2:hover {
+  text-shadow: 0 4px 8px #929292;
+  transform: scale(1.02);
+}
+
+h3:hover {
+  text-shadow: 0 4px 8px #929292;
+  transform: scale(1.02);
+}
+
+/* Global Component Styling */
+.dashboard-card {
+  background: rgba(58, 74, 82, 0.8); /* Soft Gray with transparency */
+  border-radius: 15px;
+  border: 1px solid rgba(70, 130, 180, 0.5); /* Blue border */
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(70, 130, 180, 0.1); /* Blue Neon Shadow */
+  transition: all 0.4s ease-in-out;
+  overflow: hidden;
+  position: relative;
+}
+
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg, 
+    transparent, 
+    rgba(70, 130, 180, 0.1), 
+    transparent
+  );
+  transform: rotate(-45deg);
+  transition: all 0.6s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-10px) rotate(1deg);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(70, 130, 180, 0.2); /* Blue Neon Shadow */
+}
+
+.dashboard-card:hover::before {
+  transform: rotate(45deg);
+}
+
+/* Styling for the form container */
+.form-container {
+  background: rgba(58, 74, 82, 0.7); /* Soft Gray with transparency */
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(70, 130, 180, 0.1); /* Blue Neon Shadow */
+  max-width: 700px;
+  width: 100%;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(70, 130, 180, 0.5); /* Blue Border */
+  transition: all 0.4s ease;
+}
+
+.form-container:hover {
+  transform: scale(1.02);
+  box-shadow: 
+    0 15px 30px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(70, 130, 180, 0.2); /* Blue Neon Shadow */
+}
+
+/* Shift checkbox container */
+.shift-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.shift-checkbox:hover {
+  background-color: rgba(245, 176, 65, 0.1);
+  transform: scale(1.05) translateX(5px);
+  color: #F5B041;
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(70, 130, 180, 0.5); /* Blue Thumb */
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(70, 130, 180, 0.7); /* Darker Blue on Hover */
+  width: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 32, 39, 0.3); /* Deep Midnight Blue */
+  border-radius: 10px;
+}
+
+.custom-scrollbar {
+  scroll-behavior: smooth;
+}
+
+/* Keyframe Animations */
+@keyframes subtle-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(70, 130, 180, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(70, 130, 180, 0.6); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Apply animations to specific elements */
+.animated-element {
+  animation: subtle-glow 3s infinite, float 3s infinite;
+}
+
+
+
+
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Add this to your App.css or create a new CSS file */
+
+/* Blob animation */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* For cards and transitions */
+.hover-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.hover-card:hover {
+  transform: translateY(-10px);
+}
+
+
