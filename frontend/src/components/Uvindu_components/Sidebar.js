@@ -100,9 +100,9 @@ const Sidebar = ({ isVisible, userRole }) => {
       access: ["admin"]
     },
     { 
-      to: "/payment", 
+      to: "/billTable", 
       icon: <FileClock size={20} className="flex-shrink-0" />, 
-      label: "Payment",
+      label: "All Bills",
       access: ["admin"]
     },
   
