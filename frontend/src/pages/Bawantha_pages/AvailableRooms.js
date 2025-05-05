@@ -149,7 +149,7 @@ const navigate = useNavigate();
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader size={40} className="mx-auto mb-4 text-blue-600 animate-spin" />
           <p className="text-gray-600 font-medium">Loading room data...</p>
@@ -159,7 +159,7 @@ const navigate = useNavigate();
   }
 
   return (
-    <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50 relative">
+    <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto relative">
       {/* Toast */}
       <AnimatePresence>
         {toast && (

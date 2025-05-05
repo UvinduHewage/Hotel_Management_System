@@ -57,6 +57,7 @@ function App() {
         if (data.valid) {
           setIsAuthenticated(true);
           setCurrentUser({ id: data.userId, role: data.role });
+          setShowNavigation(true);
         } else {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
@@ -122,26 +123,25 @@ function App() {
   if (!showNavigation && !isAuthenticated) {
     return (
       <Router>
-        <Routes>
-          <Route path="/" element={<HomePage onEnterSystem={() => {
-            handleEnterSystem();
-            window.location.href = '/login';
-          }} />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        <div className="w-full h-full">
+          <Routes>
+            <Route path="/" element={<HomePage onEnterSystem={handleEnterSystem} />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
       </Router>
     );
   }
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 w-full">
         {isAuthenticated && (
           <Header onSidebarToggle={handleSidebarToggle} user={currentUser} onLogout={handleLogout} />
         )}
-        <div className={`flex ${isAuthenticated ? 'pt-16' : ''}`}>
+        <div className={`flex ${isAuthenticated ? 'pt-16' : ''} w-full`}>
           {isAuthenticated && (
             <Sidebar isVisible={isSidebarVisible} userRole={currentUser?.role} />
           )}
