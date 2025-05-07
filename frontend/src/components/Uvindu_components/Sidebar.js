@@ -45,12 +45,12 @@ const Sidebar = ({ isVisible, userRole }) => {
       label: "Guest Dashboard",
       access: ["admin"]
     },
-    { 
-      to: "/staff/add", 
-      icon: <UserPlus size={20} className="flex-shrink-0" />, 
-      label: "Add New Staff",
-      access: ["admin"]
-    },
+    // { 
+    //   to: "/staff/add", 
+    //   icon: <UserPlus size={20} className="flex-shrink-0" />, 
+    //   label: "Add New Staff",
+    //   access: ["admin"]
+    // },
     { 
       to: "/attendance", 
       icon: <CheckSquare size={20} className="flex-shrink-0" />, 
@@ -79,12 +79,6 @@ const Sidebar = ({ isVisible, userRole }) => {
       to: "/table", 
       icon: <ChartNoAxesGantt size={20} className="flex-shrink-0" />, 
       label: "Room Management",
-      access: ["admin"]
-    },
-    { 
-      to: "/create-room", 
-      icon: <PlusCircle size={20} className="flex-shrink-0" />, 
-      label: "Create Room",
       access: ["admin"]
     },
     { 

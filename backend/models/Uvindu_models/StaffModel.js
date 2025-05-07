@@ -27,14 +27,17 @@ const staffSchema = new mongoose.Schema({
       "Receptionist",
       "Guest Service Agent",
       "Concierge",
-      "Bellboy/Bellman",
+      "Bellboy",
+      "Bellman",
       "Night Auditor",
       "Reservation Agent",
+
       "Housekeeping Manager",
       "Room Attendant",
       "Housekeeping Supervisor",
       "Laundry Attendant",
       "Public Area Cleaner",
+
       "F&B Manager",
       "Restaurant Manager",
       "Chef",
@@ -44,11 +47,13 @@ const staffSchema = new mongoose.Schema({
       "Kitchen Staff",
       "Banquet Coordinator",
       "Steward",
+
       "Sales Manager",
       "Marketing Manager",
       "Public Relations Manager",
       "Event Coordinator",
       "Digital Marketing Specialist",
+
       "Finance Manager",
       "Accountant",
       "Payroll Coordinator",
@@ -57,17 +62,21 @@ const staffSchema = new mongoose.Schema({
       "HR Assistant",
       "Recruitment Officer",
       "Training Coordinator",
+
       "Security Manager",
       "Security Guard",
       "Surveillance Officer",
+
       "IT Manager",
       "Network Administrator",
       "Systems Support Specialist",
       "IT Technician",
+
       "Spa Manager",
       "Spa Therapist",
       "Fitness Instructor",
       "Pool Attendant",
+      
       "Purchasing Manager",
       "Inventory Control Officer",
       "Procurement Specialist"
