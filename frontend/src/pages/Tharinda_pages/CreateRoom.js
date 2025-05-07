@@ -59,7 +59,7 @@ const CreateRoom = () => {
             className="text-blue-600 hover:text-blue-800 flex items-center"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
-            Dashboard
+            Room Management
           </button>
           <span className="mx-2 text-gray-400">/</span>
           <span className="text-gray-600">Add New Room</span>
