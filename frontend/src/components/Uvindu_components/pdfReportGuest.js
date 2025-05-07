@@ -199,7 +199,7 @@ const BookingReport = ({
   hotelName = "Grand Horizon Hotel & Resort",
   hotelAddress = "No. 45 Beachside Road, Galle, Southern Province, Sri Lanka",
   hotelContact = "+94 91 223 4567",
-  hotelEmail = "info@grandplaza.com",
+  hotelEmail = "info@grandhorizon.com",
   logoSrc = null
 }) => {
   // Calculate some additional stats for the report

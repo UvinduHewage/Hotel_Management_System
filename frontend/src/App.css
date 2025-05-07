@@ -1,77 +1,44 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-
-
-
-/*  */
 /* App.css */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #ffffff;
+  min-height: 100vh;
+  color: #333;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .content {
   display: flex;
-  margin-top: 0;  /* Reset the margin-top here */
+  margin-top: 60px; 
+  flex: 1;
 }
 
 header {
-  position: fixed;  /* Fixed to the top */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #2d3748;  /* Tailwind gray-800 */
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem 2rem;
-  z-index: 1000;  /* Ensure it stays above the sidebar */
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.3s ease-in-out;
 }
 
 /* App.css */
 
 /* AddStaff.js */
-
-/* Set up a clean background for the app */
-body {
-  font-family: 'Arial', sans-serif;
-  /* background: url('https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed; */
-  background-color: #f5f5f5; /* optional neutral background */
-  background-size: cover;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
 
 /* Styling for the form container */
 .form-container {
@@ -216,16 +183,6 @@ header {
 
 /* AddStaff.js */
 
-/* Set up a clean background for the app */
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #ffffff; /* White */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-} 
 
 
 .shadow-neon {
@@ -244,18 +201,7 @@ body {
   border-radius: 10px;
 }
 
-/* Enhanced Typography */
-h1, h2 {
-  font-weight: 700;
-  color: #41f5f5;
-  letter-spacing: -0.5px;
-  transition: all 0.3s ease;
-}
-h3 {
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  transition: all 0.3s ease;
-}
+
 
 
 h1:hover, h2:hover {
@@ -442,4 +388,201 @@ h3:hover {
   transform: translateY(-10px);
 }
 
+
+/* App.css - Adding responsive styles for auth components */
+
+/* Base styles for auth containers */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: #f9fafb;
+}
+
+/* Auth card styling */
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+/* Brand section - shows on top on mobile, side by side on larger screens */
+.brand-section {
+  background-color: #4f46e5; /* indigo-600 */
+  border-radius: 0.75rem 0.75rem 0 0;
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* Form section */
+.form-section {
+  padding: 1.5rem;
+}
+
+/* For larger screens - side-by-side layout */
+@media (min-width: 768px) {
+  .auth-container {
+    padding: 2rem;
+  }
+  
+  .auth-card {
+    max-width: 900px;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+  }
+  
+  .brand-section {
+    flex: 1;
+    border-radius: 0.75rem 0 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .form-section {
+    flex: 1;
+    max-width: 480px;
+  }
+}
+
+/* For extra-small screens */
+@media (max-width: 375px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+  
+  .brand-section, 
+  .form-section {
+    padding: 1rem;
+  }
+}
+
+/* Button styles */
+.auth-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background-color: #4f46e5; /* indigo-600 */
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #4338ca; /* indigo-700 */
+}
+
+.auth-secondary-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid #a5b4fc; /* indigo-300 */
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4f46e5; /* indigo-600 */
+  background-color: white;
+  transition: background-color 0.2s;
+}
+
+.auth-secondary-button:hover {
+  background-color: #eef2ff; /* indigo-50 */
+}
+
+/* Form input styling */
+.auth-input-group {
+  margin-bottom: 1rem;
+}
+
+.auth-input-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151; /* gray-700 */
+  margin-bottom: 0.25rem;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem; /* space for icon */
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #6366f1; /* indigo-500 */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af; /* gray-400 */
+}
+
+/* Form input container for positioning icons */
+.auth-input-container {
+  position: relative;
+}
+
+/* Logo styling */
+.auth-logo-container {
+  width: 6rem;
+  height: 6rem;
+  margin: 0 auto 1.5rem auto;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-logo {
+  width: 4rem;
+  height: 4rem;
+  color: #4f46e5; /* indigo-600 */
+}
+
+/* Feature list styling */
+.feature-list {
+  margin-top: 1.5rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.feature-icon {
+  margin-right: 0.5rem;
+}
+
+/* Transition effects */
+.auth-card, 
+.auth-button, 
+.auth-secondary-button, 
+.auth-input {
+  transition: all 0.3s ease;
+}
 

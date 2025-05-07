@@ -75,7 +75,7 @@ const ViewBookingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-8 pb-16">
+    <div className="auth-container flex justify-center items-center min-h-screen w-full">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -83,20 +83,19 @@ const ViewBookingPage = () => {
           </div>
         ) : booking ? (
           <>
-            {/* Header with Navigation */}
-            <div className="mb-8 flex items-center justify-between">
-              <button
-                onClick={() => navigate(-1)}
-                className="flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
+            {/* Breadcrumbs */}
+            <div className="flex items-center mb-8 text-sm">
+              <button 
+                onClick={() => navigate("/booked-rooms")}
+                className="text-blue-600 hover:text-blue-800 flex items-center"
               >
-                <FaArrowLeft className="mr-2" />
-                Back to Bookings
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Booking Management
               </button>
-              
-              <div className="text-right">
-                <p className="text-sm text-gray-500">Booking Reference</p>
-                <p className="font-mono font-medium text-gray-800">{booking._id?.substring(0, 8).toUpperCase() || "BREF12345"}</p>
-              </div>
+              <span className="mx-2 text-gray-400">/</span>
+              <span className="text-gray-600">View Booking #{booking._id?.substring(0, 8).toUpperCase() || "BREF12345"}</span>
             </div>
 
             {/* Booking Status Banner */}
@@ -204,28 +203,6 @@ const ViewBookingPage = () => {
                           <p className="text-blue-600">Rs. {totalPrice}</p>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-6 bg-blue-50 rounded-xl p-5 border border-blue-100">
-                  <div className="flex items-start">
-                    <div className="bg-blue-100 rounded-full p-2 mr-4">
-                      <FaCreditCard className="text-blue-600 text-lg" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-blue-800 mb-1">Payment Status</h3>
-                      <p className="text-sm text-blue-600 mb-3">
-                        {booking.status === "Checked Out" ? "Payment Completed" : "Payment Pending"}
-                      </p>
-                      {booking.status !== "Checked Out" && (
-                        <button
-                          onClick={() => navigate(`/bill/${booking._id}`)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md transition-colors"
-                        >
-                          Make Payment
-                        </button>
-                      )}
                     </div>
                   </div>
                 </div>
