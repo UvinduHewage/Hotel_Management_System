@@ -2,8 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaUser, FaIdCard, FaEnvelope, FaPhone, FaCalendarCheck, FaVenusMars } from "react-icons/fa";
-
+import { 
+  FaUser, 
+  FaIdCard, 
+  FaEnvelope, 
+  FaPhone, 
+  FaCalendarCheck, 
+  FaVenusMars,
+  FaArrowLeft,
+  FaEdit
+} from "react-icons/fa";
 
 const UpdateBookingPage = () => {
   const { id } = useParams();
@@ -32,6 +40,7 @@ const UpdateBookingPage = () => {
       .catch((error) => {
         console.error("Error fetching booking:", error);
         setLoading(false);
+        toast.error("Could not retrieve booking information");
       });
   }, [id]);
 
@@ -47,7 +56,6 @@ const UpdateBookingPage = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); 
 
-   
     if (!formData.customerName.trim()) {
       errors.customerName = "Customer Name is required";
     } else {
@@ -121,190 +129,289 @@ const UpdateBookingPage = () => {
     setShowConfirmPopup(true);
   };
 
+  const calculateNights = () => {
+    if (formData.checkInDate && formData.checkOutDate) {
+      const checkIn = new Date(formData.checkInDate);
+      const checkOut = new Date(formData.checkOutDate);
+      const diffTime = Math.abs(checkOut - checkIn);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+    return 0;
+  };
+
   return (
-    <>
-      <div
-        className="flex min-h-screen bg-cover bg-center bg-no-repeat relative "
-        style={{
-          backgroundImage: `url('https://i1.wp.com/hotel-latour.co.uk/app/app-uploads/2021/11/HLT_reception_Lifestyle1_2500-min.jpg?ssl=1&w=2500&quality=85')`,
-        }}
-      >
-        <div className="absolute inset-0 backdrop-blur-md bg-black bg-opacity-20"></div>
+    <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50">
+        {/* Breadcrumbs */}
+        <div className="flex items-center mb-8 text-sm">
+          <button
+            onClick={() => navigate("/booked-rooms")}
+            className="text-blue-600 hover:text-blue-800 flex items-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Booking Management
+          </button>
+          <span className="mx-2 text-gray-400">/</span>
+          <span className="text-gray-600">
+            View Booking #{booking?._id?.substring(0, 8).toUpperCase() || "BREF12345"}
+          </span>
+        </div>
 
-        <div className="flex-1 p-14 relative z-10 flex justify-center">
-          {loading ? (
-            <p className="p-6 text-white text-xl font-semibold">Loading booking details...</p>
-          ) : booking ? (
-            <div className="p-10 bg-white/20 shadow-xl rounded-lg w-3/4 backdrop-blur-md border border-white border-opacity-30 mt-8">
-              <div className="relative w-full h-72 rounded-lg overflow-hidden shadow-lg bg-gray-800 flex items-center justify-center">
-                <div
-                  className="absolute inset-0 w-full h-full"
-                  style={{
-                    backgroundImage: `url(${booking.image || "https://source.unsplash.com/800x600/?hotel-room"})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                ></div>
+{/* Header */}
+<div className="bg-blue-700 text-white shadow-lg rounded-2xl overflow-hidden">
+  <div className="container mx-auto py-6 px-4">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-3">
+        <h1 className="text-2xl font-bold">Update Booking</h1>
+      </div>
+      <div className="text-sm opacity-80 bg-blue-800 py-2 px-4 rounded-full">
+        Booking ID: #{id}
+      </div>
+    </div>
+  </div>
+</div>
 
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-white">
-                  <h2 className="text-3xl font-bold">{booking.roomType} - Room {booking.roomNumber}</h2>
-                  <p className="text-lg">Rs. {booking.price} per night</p>
+      <div className="container mx-auto py-8 px-4">
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-blue-400 mb-3"></div>
+              <div className="h-4 w-36 bg-blue-400 rounded"></div>
+            </div>
+          </div>
+        ) : booking ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Room Info Card */}
+            <div className="col-span-1">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                <div className="h-48 relative">
+                  <div
+                    className="absolute inset-0 w-full h-full"
+                    style={{
+                      backgroundImage: `url(${booking.image || "https://source.unsplash.com/800x600/?hotel-room"})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  ></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-4 text-white">
+                    <div className="text-sm font-semibold bg-blue-700 rounded-full px-3 py-1 inline-block mb-2">
+                      {booking.roomType}
+                    </div>
+                    <h2 className="text-xl font-bold">Room {booking.roomNumber}</h2>
+                  </div>
+                </div>
+                
+                <div className="p-5 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Price per night</span>
+                    <span className="text-blue-700 font-bold text-lg">Rs. {booking.price}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Total nights</span>
+                    <span className="font-semibold">{calculateNights()}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                    <span className="text-gray-500">Total amount</span>
+                    <span className="text-blue-700 font-bold text-xl">
+                      Rs. {booking.price * calculateNights()}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <h3 className="font-semibold text-gray-700 mb-2">Booking Status</h3>
+                    <div className="bg-green-100 text-green-800 px-3 py-2 rounded-md text-sm font-medium inline-block">
+                      Active
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className="relative bg-white/60 backdrop-blur-md rounded-lg shadow-lg p-10 mt-8">
-                <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">Update Booking Details</h2>
+            {/* Form Section */}
+            <div className="col-span-1 lg:col-span-2">
+              <div className="bg-white shadow-md rounded-lg border border-gray-100 overflow-hidden">
+                <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
+                  <div className="flex items-center space-x-2">
+                    <FaEdit className="text-blue-700" />
+                    <h2 className="text-lg font-semibold text-gray-800">Edit Guest Information</h2>
+                  </div>
+                </div>
 
-                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-20 gap-y-8 text-gray-800">
-                  <div className="flex items-center space-x-3">
-                    <FaUser className="text-blue-700 text-xl" />
-                    <div className="w-full">
-                      <label className="block text-gray-700 font-semibold">Customer Name</label>
+                <form onSubmit={handleSubmit} className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <FaUser className="text-blue-600" />
+                        <span>Customer Name</span>
+                      </label>
                       <input
                         type="text"
                         name="customerName"
                         value={formData.customerName}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter full name"
                       />
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-3">
-                    <FaIdCard className="text-blue-700 text-xl" />
-                    <div className="w-full">
-                      <label className="block text-gray-700 font-semibold">NIC</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <FaIdCard className="text-blue-600" />
+                        <span>NIC</span>
+                      </label>
                       <input
                         type="text"
                         name="nic"
                         value={formData.nic}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter NIC number"
                       />
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-3">
-                    <FaEnvelope className="text-blue-700 text-xl" />
-                    <div className="w-full">
-                      <label className="block text-gray-700 font-semibold">Email</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <FaEnvelope className="text-blue-600" />
+                        <span>Email</span>
+                      </label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter email address"
                       />
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-3">
-                    <FaPhone className="text-blue-700 text-xl" />
-                    <div className="w-full">
-                      <label className="block text-gray-700 font-semibold">Phone</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <FaPhone className="text-blue-600" />
+                        <span>Phone</span>
+                      </label>
                       <input
                         type="text"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter phone number"
                       />
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-3">
-                    <FaVenusMars className="text-blue-700 text-xl" />
-                    <div className="w-full">
-                      <label className="block text-gray-700 font-semibold">Gender</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <FaVenusMars className="text-blue-600" />
+                        <span>Gender</span>
+                      </label>
                       <select
                         name="gender"
                         value={formData.gender}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                       </select>
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-3">
-                    <FaCalendarCheck className="text-blue-700 text-xl" />
-                    <div className="w-full">
-                      <label className="block text-gray-700 font-semibold">Check-In Date</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <FaCalendarCheck className="text-blue-600" />
+                        <span>Check-In Date</span>
+                      </label>
                       <input
                         type="date"
                         name="checkInDate"
                         value={formData.checkInDate}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-3">
-                    <FaCalendarCheck className="text-blue-700 text-xl" />
-                    <div className="w-full">
-                      <label className="block text-gray-700 font-semibold">Check-Out Date</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <FaCalendarCheck className="text-blue-600" />
+                        <span>Check-Out Date</span>
+                      </label>
                       <input
                         type="date"
                         name="checkOutDate"
                         value={formData.checkOutDate}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded-md shadow-sm focus:ring-2 focus:ring-blue-400"
+                        className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
                   </div>
 
-                  <div className="col-span-2 flex justify-between w-full mt-12 pt-6 ">
+                  <div className="flex justify-end space-x-4 mt-8">
                     <button
                       type="button"
-                      className="px-5 py-2 rounded-md bg-gray-500 text-white shadow-md hover:bg-gray-600 transition"
                       onClick={() => navigate(-1)}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="px-5 py-2 rounded-md bg-yellow-500 text-white shadow-md hover:bg-yellow-600 transition"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                     >
-                      Confirm
+                      Update Booking
                     </button>
                   </div>
                 </form>
               </div>
             </div>
-          ) : (
-            <p className="p-6 text-white text-xl text-center">Booking not found.</p>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="flex justify-center items-center h-64">
+            <div className="bg-white p-8 rounded-lg shadow-md text-center">
+              <div className="text-red-500 text-5xl mb-4">!</div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">Booking Not Found</h2>
+              <p className="text-gray-600 mb-4">The booking you're looking for doesn't exist or has been removed.</p>
+              <button
+                onClick={() => navigate(-1)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
+      {/* Confirmation Modal */}
       {showConfirmPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4 transform transition-all">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Confirm Booking Update</h3>
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4 transform transition-all">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Confirm Update</h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to update this booking? 
+              Are you sure you want to update the booking information for {formData.customerName}?
             </p>
-            <div className="flex flex-row-reverse gap-4">
-              <button
-                onClick={handleUpdateBooking}
-                className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors"
-              >
-                Yes, Update Booking
-              </button>
+            <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setShowConfirmPopup(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
               >
                 Cancel
+              </button>
+              <button
+                onClick={handleUpdateBooking}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Confirm Update
               </button>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

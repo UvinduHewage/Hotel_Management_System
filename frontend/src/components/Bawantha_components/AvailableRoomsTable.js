@@ -15,7 +15,7 @@ const AvailableRoomsTable = ({ rooms }) => {
     <div className="overflow-x-auto">
       <table className="w-full border-collapse border border-gray-300">
         <thead>
-          <tr className="bg-gray-200 text-center">
+          <tr className="text-center">
             <th className="border p-2 w-1/6">Room</th>
             <th className="border p-2 w-1/6">Room Type</th>
             <th className="border p-2 w-1/6">Bed</th>
