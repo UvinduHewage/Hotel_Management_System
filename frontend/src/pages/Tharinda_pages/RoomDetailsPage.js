@@ -38,7 +38,7 @@ const RoomDetailsPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12">
+    <div className="min-h-screen p-6 lg:p-8 max-w-7xl mx-auto bg-gray-50">
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Image Gallery */}
