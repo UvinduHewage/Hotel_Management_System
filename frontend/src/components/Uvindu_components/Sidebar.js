@@ -45,12 +45,12 @@ const Sidebar = ({ isVisible, userRole }) => {
       label: "Guest Dashboard",
       access: ["admin"]
     },
-    // { 
-    //   to: "/staff/add", 
-    //   icon: <UserPlus size={20} className="flex-shrink-0" />, 
-    //   label: "Add New Staff",
-    //   access: ["admin"]
-    // },
+    { 
+      to: "/analytics", 
+      icon: <UserPlus size={20} className="flex-shrink-0" />, 
+      label: "A",
+      access: ["admin"]
+    },
     { 
       to: "/attendance", 
       icon: <CheckSquare size={20} className="flex-shrink-0" />, 
