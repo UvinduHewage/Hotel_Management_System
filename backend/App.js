@@ -11,7 +11,7 @@ const paymentRoutes = require("./routes/Dineth_routes/paymentRoutes");
 const billRoutes = require("./routes/Dineth_routes/billRoutes");
 
 // Import controllers
-const paymentController = require("./controllers/Dineth_controllers/paymentController"); // ✅ Import your payment controller
+const paymentController = require("./controllers/Dineth_controllers/paymentController"); 
 
 const app = express();
 
