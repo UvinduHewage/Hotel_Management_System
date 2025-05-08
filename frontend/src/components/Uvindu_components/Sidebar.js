@@ -14,11 +14,22 @@ import {
   Database,
   PlusCircle,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  ChartNoAxesCombined
 } from "lucide-react";
 
 const Sidebar = ({ isVisible, userRole }) => {
-  const location = useLocation();
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Sidebar component that displays a collapsible navigation menu based on user role.
+ *
+ * @param {boolean} isVisible - Determines if the sidebar is expanded or collapsed.
+ * @param {string} userRole - The role of the user, which dictates accessible menu items.
+ *
+ * @returns {JSX.Element} A motion-enabled sidebar with scrollable, role-based navigation links.
+ */
+
+/*******  ab738358-8416-4f87-89b1-6001b1a0c03b  *******/  const location = useLocation();
   const sidebarRef = useRef(null);
   const scrollRef = useRef(null);
   const [showScrollButtons, setShowScrollButtons] = React.useState(false);
@@ -45,12 +56,12 @@ const Sidebar = ({ isVisible, userRole }) => {
       label: "Guest Dashboard",
       access: ["admin"]
     },
-    // { 
-    //   to: "/staff/add", 
-    //   icon: <UserPlus size={20} className="flex-shrink-0" />, 
-    //   label: "Add New Staff",
-    //   access: ["admin"]
-    // },
+    { 
+      to: "/analytics", 
+      icon: <ChartNoAxesCombined size={20} className="flex-shrink-0" />, 
+      label: "Analytics",
+      access: ["admin"]
+    },
     { 
       to: "/attendance", 
       icon: <CheckSquare size={20} className="flex-shrink-0" />, 

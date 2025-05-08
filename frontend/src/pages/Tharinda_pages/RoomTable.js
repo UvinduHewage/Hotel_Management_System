@@ -171,31 +171,7 @@ const RoomTable = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen w-full">
-      {/* Luxury Hotel Header */}
-      <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <svg className="w-8 h-8 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-              </svg>
-              <h1 className="text-2xl font-bold tracking-tight">Luxury Haven</h1>
-            </div>
-            <div className="hidden md:flex items-center space-x-6">
-              <button className="text-blue-100 hover:text-white transition-colors">Dashboard</button>
-              <button className="text-blue-100 hover:text-white transition-colors">Reservations</button>
-              <button className="text-white font-medium">Rooms</button>
-              <button className="text-blue-100 hover:text-white transition-colors">Guests</button>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                Admin Panel
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="auth-container flex justify-center items-center min-h-screen w-full">
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
@@ -577,23 +553,6 @@ const RoomTable = () => {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-50 border-t border-gray-200 mt-12">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-              </svg>
-              <span className="text-lg font-semibold text-gray-800">Luxury Haven</span>
-            </div>
-            <div className="mt-4 md:mt-0 text-sm text-gray-500">
-              © {new Date().getFullYear()} Luxury Haven Hotel Management System. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
 
       {/* Add CSS for animations */}
       <style jsx>{`

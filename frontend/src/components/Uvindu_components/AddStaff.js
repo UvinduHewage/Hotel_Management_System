@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, SunDim, Moon, Upload, UserPlus, ChevronDown, Building2, Hotel, CheckCircle2, AlertCircle, AlertTriangle, X, CloudSun } from "lucide-react"; 
+import { ChevronLeft, Sun, SunDim, Moon, Upload, UserPlus, ChevronDown, Building2, Hotel, CheckCircle2, AlertCircle, AlertTriangle, X, CloudSun } from "lucide-react"; 
 import axios from "axios";
 
 
@@ -32,10 +32,8 @@ const AddStaff = () => {
 
   // Navigate function for breadcrumbs
   const navigate = () => {
-    // Navigate to dashboard/previous page when breadcrumb is clicked
-    window.history.back(); // This will go to the previous page in browser history
-    // If using React Router, you could use history.goBack() or navigate(-1)
-    // For specific path navigation: history.push('/dashboard') or navigate('/dashboard')
+    window.history.back(); 
+
   };
 
   const departments = {
@@ -245,9 +243,8 @@ const AddStaff = () => {
           onClick={() => navigate()}
           className="text-blue-600 hover:text-blue-800 flex items-center"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+            <ChevronLeft className="h-4 w-4 mr-1" />
+
           Dashboard
         </button>
         <span className="mx-2 text-gray-400">/</span>
@@ -275,6 +272,7 @@ const AddStaff = () => {
             </p>
           </div>
         </div>
+
 
         {/* Form Section */}
         <div className="p-8 space-y-6 overflow-y-auto max-h-[900px]">
@@ -546,17 +544,6 @@ const AddStaff = () => {
                 </>
               )}
             </motion.button>
-            
-            {/* For development debugging only - remove in production */}
-            {process.env.NODE_ENV === 'development' && (
-              <button
-                type="button"
-                onClick={debugFormData}
-                className="mt-4 text-sm text-gray-500 hover:text-gray-700"
-              >
-                Debug Form Data (console)
-              </button>
-            )}
           </form>
         </div>
       </motion.div>
