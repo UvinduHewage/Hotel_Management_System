@@ -14,6 +14,7 @@ import UpdateStaff from "./components/Uvindu_components/UpdateStaff";
 import HomePage from "./components/Uvindu_components/Home";
 import Login from "./components/AuthComponents/Login";
 import Signup from "./components/AuthComponents/Signup";
+import AnalyticsDashboard from "./components/Uvindu_components/AnalyticsDashboard";
 
 
 import PaymentWithStripe from "./components/Dineth_Components/PaymentWithStripe"; // ✅ Correct Payment Component
@@ -162,6 +163,8 @@ function App() {
               <Route path="/room-details/:roomNumber" element={<ProtectedRoute element={<RoomDetailsPage />} />} />
               <Route path="/rooms/:id" element={<ProtectedRoute element={<RoomDetail />} />} />
               <Route path="/payment/:id" element={<ProtectedRoute element={<PaymentWithStripe />} />} />
+              <Route path="/analytics" element={<AnalyticsDashboard />} />
+
 
 
               {/* Admin only routes */}
