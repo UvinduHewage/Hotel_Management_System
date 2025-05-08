@@ -273,6 +273,7 @@ const AddStaff = () => {
           </div>
         </div>
 
+
         {/* Form Section */}
         <div className="p-8 space-y-6 overflow-y-auto max-h-[900px]">
           <motion.h2 
