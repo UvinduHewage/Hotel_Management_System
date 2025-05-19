@@ -13,7 +13,7 @@ A simple and efficient hotel management system built with MERN stack. It helps h
 ## 🚀 Technologies Used
 
 - Frontend: React.js  
-- Backend: Spring Boot / Node.js  
+- Backend: Node.js  
 - Database: MongoDB  
 
 
